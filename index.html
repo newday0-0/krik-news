@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Кричащая правда — №404</title>
+
+<!-- Шрифты под "газету" -->
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#f4f1e6;
+    --ink:#111;
+    --ink-dim:#333;
+    --rule:#b9b3a2;
+    --accent:#8a2b2b;
+  }
+  html,body{margin:0;padding:0;background:#e9e4d7;color:var(--ink);}
+  body{font-family:"Libre Baskerville",serif;line-height:1.45;-webkit-font-smoothing:antialiased}
+  .page{
+    max-width:1000px;margin:0 auto;background:var(--paper);padding:28px 22px 96px;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);position:relative;overflow:hidden
+  }
+  /* Текстура бумаги */
+  .page:before{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;
+    background:
+      radial-gradient(rgba(0,0,0,.03) 1px, transparent 1px) 0 0/3px 3px,
+      radial-gradient(rgba(0,0,0,.015) 1px, transparent 1px) 1px 1px/4px 4px}
+  /* Шапка */
+  .masthead{text-align:center;margin:0 0 10px}
+  .brand{font-family:"Playfair Display",serif;font-weight:800;letter-spacing:.02em;font-size:56px;line-height:1}
+  .meta{margin-top:6px;font-size:13px;color:var(--ink-dim)}
+  .strap{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:14px;margin-top:2px}
+  .rule{border-top:2px solid var(--rule);margin:12px 0 18px}
+  /* Сетка-газета */
+  .grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:26px;
+  }
+  @media (max-width:900px){ .grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:640px){ .grid{grid-template-columns:1fr;} .brand{font-size:40px} }
+
+  h2,h3{font-family:"Playfair Display",serif;line-height:1.12;margin:10px 0 6px}
+  h2{font-size:28px;font-weight:800}
+  h3{font-size:20px;font-weight:600}
+  p,ul,blockquote,figure,.ad,.chat{margin:0 0 10px}
+  .dropcap:first-letter{float:left;font-size:54px;line-height:.9;padding-right:.1em;font-family:"Playfair Display",serif;font-weight:800}
+  figure{margin:0}
+  figure img{width:100%;display:block}
+  figcaption{font-size:12px;color:#555;border-top:1px solid var(--rule);padding-top:4px;font-style:italic}
+  .ad{border:1px dashed var(--rule);padding:8px 10px;font-size:14px;background:rgba(255,255,255,.35)}
+  .ad b{font-family:"Playfair Display",serif}
+  .chat{font-size:14px;border-left:3px solid var(--rule);padding-left:10px}
+  .small{font-size:14px;color:#333}
+
+  /* Лёгкие "глюки" */
+  .glitch{position:relative;display:inline-block}
+  .glitch:after{
+    content:attr(data-text);position:absolute;left:0;top:0;clip-path:inset(0 0 50% 0);transform:translateX(1px);
+    color:#b80a0a;opacity:.8;animation:gl1 3s infinite steps(2);
+  }
+  .glitch:before{
+    content:attr(data-text);position:absolute;left:0;top:0;clip-path:inset(50% 0 0 0);transform:translateX(-1px);
+    color:#0a0ab8;opacity:.8;animation:gl2 3s infinite steps(2);
+  }
+  @keyframes gl1{0%{transform:translateX(0)}50%{transform:translateX(1px)}100%{transform:translateX(0)}}
+  @keyframes gl2{0%{transform:translateX(0)}50%{transform:translateX(-1px)}100%{transform:translateX(0)}}
+  .wobble{display:inline-block;animation:wob 6s infinite ease-in-out}
+  @keyframes wob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+
+  /* Поле ввода */
+  .answer{
+    grid-column:1/-1;margin-top:6px;padding-top:8px;border-top:2px solid var(--rule)
+  }
+  .answer label{display:block;font-weight:700;margin:8px 0 6px}
+  .answer input{
+    padding:10px 12px;border:1px solid #999;font-size:16px;width:100%;max-width:420px;background:#fcfbf6
+  }
+  .answer button{
+    margin-top:10px;padding:10px 14px;border:1px solid #111;background:#f5f1e4;cursor:pointer
+  }
+  .hint{font-size:14px;color:#666;margin-top:6px}
+
+  /* Блэкаут */
+  #blackout{position:fixed;inset:0;background:#000;display:none;color:#eee;align-items:center;justify-content:center;flex-direction:column;z-index:9999;padding:24px;text-align:center}
+  #finalText{max-width:720px;font-size:20px;line-height:1.55;opacity:0;transition:opacity .8s}
+  #goNext{margin-top:18px;padding:10px 14px;border:1px solid #eee;background:#111;color:#eee;cursor:pointer}
+</style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <div class="brand">КРИЧАЩАЯ ПРАВДА</div>
+      <div class="strap">AT ONE, TWO, THREE — PANIC!</div>
+      <div class="meta">№ 404, выпуск не найден • 14 августа 2025</div>
+    </header>
+    <div class="rule"></div>
+
+    <section class="grid">
+      <!-- Колонка 1 -->
+      <article>
+        <h2>Тур Крика: от подвала до Святого Городка</h2>
+        <p class="dropcap"><b>Афиша‑2025.</b> В каждом городе — свой бонус и свой страх.</p>
+        <ul>
+          <li><b>Святой Городок</b> — «Вход свободный. Выход — платный».</li>
+          <li><b>Улитково</b> — «Главный спонсор — “Склизь и Партнёры”».</li>
+          <li><b>Катастрофа‑Сити</b> — «Зрителей просят приносить свои катастрофы».</li>
+          <li><b>Алеговск</b> — «Лагман — 1:0, люди — живы ещё 5 минут».</li>
+          <li><b>Зловещая долина</b> — «Спецформат: <i>всё будет плохо</i>».</li>
+          <li><b>Цветок Мандрагоры</b> — «Просьба не трогать. Он орёт громче Крика».</li>
+          <li><b>Кровать №3</b> — «Сольник для спящего Данилы. Тихо. Наверное».</li>
+        </ul>
+
+        <figure>
+          <img src="img/paparazzi-1.jpg" alt="Крик в быту">
+          <figcaption>Крик в быту. Комментарий очевидца: «Иногда мне кажется, что он на чём-то тяжёлом… но я не осуждаю: мне самому кажется, что я сам на чём-то тяжёлом».</figcaption>
+        </figure>
+
+        <div class="ad"><b>Объявление:</b> Куплю лопату — дорого! (для терапевтических нужд)</div>
+      </article>
+
+      <!-- Колонка 2 -->
+      <article>
+        <h2>Биография Крика (коротко)</h2>
+        <p><i>Меня зовут Крик. Моя профессия — сеять ужас. Моё хобби — заказывать шмот на вайлдберриз и не забирать.</i></p>
+        <p>«Ну что, привет, ребятульки! Сколько лет, сколько поломанных ног?»</p>
+        <p>«Знаете, говорят, время лечит. НО Я — ПРЕДПОЧИТАЮ СКАЛЬПЕЛЬ!»</p>
+        <p>«Да, знаю, знаю. Вы ждали меня. А я — не ждал вас. Потому что я на вечном турне… по вашим страхам!»</p>
+
+        <div class="chat">
+          <b>— Бу.</b><br>
+          <b>— Ты чо, ахуел?</b><br>
+          <span class="small">(диалог у мусорки, стенограмма редакции)</span>
+        </div>
+
+        <p>«Вот вы стремитесь к вершинам… А я — к кухонному ящику. Там мой терапевт. Он говорит “резать!”, и я такой: “кого?!”»</p>
+        <p>«Вчера сел на диван… проснулся через 3 дня. И в костюме Фредди Меркьюри. Я хз, ребят. Я тоже живу»</p>
+
+        <p>«Куда ты бежишь, вампиром стать хочешь?»</p>
+        <p>«А давайте я вашего сына забаню» — так я познакомился с охранником в Зловещей долине.</p>
+        <p>«Годовщина с того момента, как эта женщина орёт» — отмечаю ежегодно.</p>
+        <p>«АХАХА ЧТО ЗА МЕТОДЫ ЛЕЧЕНИЯ» — сказал врач, глядя на мой скальпель. <i>(мы подружились)</i></p>
+
+        <figure>
+          <img src="img/speaker-gif-redraw.jpg" alt="Спикер с пантомимой">
+          <figcaption>Спикер: «где мальчик притворяется, что застрелился». Рисунок реконструирован.</figcaption>
+        </figure>
+      </article>
+
+      <!-- Колонка 3 -->
+      <article>
+        <h2>Слухи и домыслы</h2>
+        <div class="chat">
+          <b>Фанат:</b> «У моей подруги был друг… она поссорилась и с родителями… что ей делать?»<br>
+          <b>Крик:</b> «А что у неё случилось?»<br>
+          <span class="small">Редакция: очевидная шутка, да.</span>
+        </div>
+        <p><b>Музыкальная перепалка (мем):</b><br>
+          — schni schna schna pi schnapi schnapi schnap;<br>
+          — cut cut cut me up and fuck fuck fuck me up.
+        </p>
+        <p><b>Мини‑история:</b> Крик проспал завод. Завод — тоже проспал. С тех пор там всегда выходной.</p>
+        <p>«Вот хуесос. Ладно, отвечу тем же» — рецензия на налоговую.</p>
+        <p>«А нахуй он валун на гору катит?» — однажды спросил я у скульптуры. Она не ответила.</p>
+        <p>«Ну я же психбольная: сначала делаю, потом думаю» — внутренний регламент редакции.</p>
+
+        <figure>
+          <img src="img/memes-collage.jpg" alt="Мемы и вырезки">
+          <figcaption>Коллаж вырезок. Подпись автора: «да, понял по итогу нихуя» (после дня в школе).</figcaption>
+        </figure>
+      </article>
+
+      <!-- Колонка 1: продолжение, философский блок -->
+      <article>
+        <h2>Колонка редактора</h2>
+        <p>«А никогда — это… слишком долго. Возможно, стоило бы спрыгнуть — добрые советы от Крика».</p>
+        <p class="dropcap">И вот вы… все бегаете от меня. Пищите. Молите о пощаде. Это приносит мне неописуемое удовольствие.</p>
+        <p>Но… однажды я встретил нечто. Оно не испугалось. Не торопилось. За полчаса преодолевает сантиметр. Оно никогда не бежит. Оно… ползёт.</p>
+        <p><span class="glitch" data-text="Оно почти как ты… Данила.">Оно почти как ты… Данила.</span></p>
+        <p class="small">[свет мерцает, радио шипит]</p>
+
+        <p class="wobble">Ты ведь знаешь, о ком я. Мой самый страшный кошмар. Моё… проклятие. Ты знаешь моего врага в лицо?</p>
+      </article>
+
+      <!-- Поле ввода -->
+      <article class="answer">
+        <label for="secret">Назови его имя…</label>
+        <input id="secret" type="text" placeholder="впиши сюда">
+        <button id="checkBtn">Проверить</button>
+        <div id="hint" class="hint"></div>
+      </article>
+    </section>
+  </main>
+
+  <!-- Блэкаут и финал -->
+  <div id="blackout">
+    <div id="finalText">
+      <p>Ладно… Ты узнал. Похоже, теперь ты готов.</p>
+      <p>Но не говори ей, что я тебе это сказал.</p>
+      <button id="goNext">Продолжить</button>
+    </div>
+  </div>
+
+<script>
+  // ==== настройки ====
+  const NEXT_URL = "https://example.com/next-site"; // ← замени на ссылку следующего "глючного" сайта
+
+  // ==== логика ответа ====
+  (function(){
+    const ok = ["улитка","улиточка","snail","ulitka","ulitochka"];
+    const input = document.getElementById('secret');
+    const btn = document.getElementById('checkBtn');
+    const hint = document.getElementById('hint');
+    const blackout = document.getElementById('blackout');
+    const finalText = document.getElementById('finalText');
+
+    function norm(s){ return (s||"").toLowerCase().replace(/\s+/g,'').trim(); }
+
+    btn.addEventListener('click', ()=>{
+      const val = norm(input.value);
+      if(ok.includes(val)){
+        blackout.style.display = 'flex';
+        setTimeout(()=>{ finalText.style.opacity = 1; }, 500);
+      } else {
+        hint.textContent = "Не то имя. Подсказка: ползёт медленно… 🐌";
+      }
+    });
+
+    document.getElementById('goNext').addEventListener('click', ()=>{ window.location.href = NEXT_URL; });
+  })();
+</script>
+</body>
+</html>
