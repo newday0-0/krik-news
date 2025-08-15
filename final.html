@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Финал</title>
+<style>
+    body {
+        margin: 0;
+        background-color: black;
+        color: white;
+        font-family: monospace;
+        text-align: center;
+        padding: 40px;
+    }
+
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 3s forwards;
+    }
+    @keyframes fadeIn {
+        to { opacity: 1; }
+    }
+
+    .glitch {
+        position: relative;
+        display: inline-block;
+        animation: glitchAnim 2s infinite;
+    }
+
+    @keyframes glitchAnim {
+        0% { text-shadow: 2px 2px red; }
+        20% { text-shadow: -2px -2px blue; }
+        40% { text-shadow: 2px -2px lime; }
+        60% { text-shadow: -2px 2px magenta; }
+        80% { text-shadow: 2px 2px cyan; }
+        100% { text-shadow: none; }
+    }
+</style>
+</head>
+<body>
+
+<h1 class="fade-in glitch" style="animation-delay: 1s;">Данила...</h1>
+<p class="fade-in" style="animation-delay: 3s;">Я знал, что ты ответишь правильно...</p>
+<p class="fade-in" style="animation-delay: 5s;">Но теперь уже слишком поздно.</p>
+<p class="fade-in" style="animation-delay: 7s;">...</p>
+
+</body>
+</html>
