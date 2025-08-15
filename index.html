@@ -6,14 +6,12 @@
 <title>Кричащая правда — №404</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
-
 <style>
 :root{
   --paper:#f4ecd7;
   --ink:#111;
   --rule:#b9b19a;
-  --accent:#db2b39;
-  --darkness:0; /* скролл-мрак 0..1 */
+  --darkness:0; /* 0..1 — мрак от скролла */
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:#fff;color:#222;font-family:"PT Serif",serif;line-height:1.6}
@@ -26,7 +24,7 @@ img{max-width:100%;height:auto}
   box-shadow:0 0 0 1px #000 inset;
   overflow-x:hidden;
 }
-/* Статическое потемнение к низу */
+/* статичное потемнение к низу */
 .page:before{
   content:""; position:absolute; inset:0; pointer-events:none;
   background:
@@ -35,14 +33,14 @@ img{max-width:100%;height:auto}
     radial-gradient(rgba(0,0,0,.015) 1px, transparent 1px) 1px 1px/4px 4px;
   mix-blend-mode:multiply;
 }
-/* Динамическое потемнение от скролла */
+/* динамическое потемнение от скролла */
 .page::after{
   content:""; position:absolute; inset:0; pointer-events:none;
   background:
     linear-gradient(to bottom,
       rgba(0,0,0,0) 10%,
-      rgba(0,0,0, calc(var(--darkness) * 0.35)) 45%,
-      rgba(0,0,0, calc(var(--darkness) * 0.65)) 75%,
+      rgba(0,0,0, calc(var(--darkness) * .35)) 45%,
+      rgba(0,0,0, calc(var(--darkness) * .65)) 75%,
       rgba(0,0,0, var(--darkness)) 100%);
   mix-blend-mode:multiply; transition:background .2s linear;
 }
@@ -67,7 +65,7 @@ p{margin:10px 0}
 figure{margin:10px 0}
 figcaption{font-size:12px;color:#555;border-top:1px solid var(--rule);padding-top:4px;font-style:italic}
 
-/* Фото-эффекты («как отредактировано») */
+/* стили фоток */
 .photo{position:relative; overflow:hidden; border:1px solid #d8d1ba; background:#fff}
 .photo img{display:block; width:100%; filter:contrast(1.05) saturate(.95)}
 .photo.grain:after{
@@ -84,17 +82,7 @@ figcaption{font-size:12px;color:#555;border-top:1px solid var(--rule);padding-to
 .photo.halftone img{filter:grayscale(.15) contrast(1.08) saturate(.9)}
 .neon img{filter:drop-shadow(0 0 6px #39a0ff) drop-shadow(0 0 14px #0b66ff)}
 
-/* Объявление поверх плашки */
-.adwrap{position:relative; border:1px dashed var(--rule)}
-.adwrap img{display:block; width:100%}
-.adwrap .adline{
-  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-  font:700 18px/1.2 "Montserrat",sans-serif; text-align:center;
-  color:#ffe9bf; text-shadow:0 1px 0 #000, 0 0 8px #ff6500;
-  padding:10px;
-}
-
-/* Реплики-пузыри */
+/* реплики */
 .speech{position:relative}
 .bubble{
   position:absolute; max-width:46%; background:#fff; border:1px solid #111; padding:6px 8px;
@@ -106,7 +94,7 @@ figcaption{font-size:12px;color:#555;border-top:1px solid var(--rule);padding-to
 .b2{bottom:10%; right:8%}
 .b2:after{right:10px; top:-16px; border-bottom-color:#111; transform:translateY(-1px)}
 
-/* Глитч-зоны */
+/* глитчи */
 .glitch-zone{position:relative; isolation:isolate}
 .glitch-zone::after{
   content:""; position:absolute; inset:-4px; pointer-events:none; opacity:0;
@@ -117,20 +105,12 @@ figcaption{font-size:12px;color:#555;border-top:1px solid var(--rule);padding-to
   transition:opacity .15s;
 }
 .glitch-zone.glitch-active::after{ opacity:.9; animation:glScan 700ms steps(6) infinite; }
-@keyframes glScan{
-  0%{ transform:translateY(-2px) }
-  50%{ transform:translateY(1px) }
-  100%{ transform:translateY(-2px) }
-}
+@keyframes glScan{ 0%{transform:translateY(-2px)} 50%{transform:translateY(1px)} 100%{transform:translateY(-2px)} }
 .glitch-zone h2,.glitch-zone h3{position:relative}
 .glitch-zone.glitch-active h2,.glitch-zone.glitch-active h3{animation:glJit 420ms steps(2) infinite}
-@keyframes glJit {
-  0%{ transform:translateX(0) skewX(0deg) }
-  50%{ transform:translateX(-0.5px) skewX(-0.2deg) }
-  100%{ transform:translateX(0) skewX(0deg) }
-}
+@keyframes glJit{ 0%{transform:translateX(0) skewX(0)} 50%{transform:translateX(-0.5px) skewX(-0.2deg)} 100%{transform:translateX(0) skewX(0)} }
 
-/* Вход по коду */
+/* вход по коду */
 #gate {
   position:fixed; inset:0; background:#000; color:#eee;
   display:flex; align-items:center; justify-content:center; z-index:10000;
@@ -147,7 +127,7 @@ figcaption{font-size:12px;color:#555;border-top:1px solid var(--rule);padding-to
 .gate-btn { margin-top:10px; padding:10px 14px; border:1px solid #eee; background:#111; color:#eee; cursor:pointer; }
 .gate-hint { margin-top:8px; font-size:14px; color:#aaa; }
 
-/* Финальный blackout */
+/* финальный blackout */
 #blackout{
   display:none; position:fixed; inset:0; z-index:9000;
   background:#000; color:#eee; align-items:center; justify-content:center; text-align:center; padding:20px;
@@ -189,18 +169,19 @@ input[type="text"],input[type="password"]{font:16px/1.2 "Montserrat",sans-serif}
     <hr class="rule">
   </header>
 
+  <!-- Афиша -->
   <section class="grid">
     <div>
       <h2>Тур Крика: от подвала до улицы</h2>
-      <p><b>Афиша-2025.</b> В каждом городе — свой бонус и свой страх.</p>
+      <p><b>Афиша‑2025.</b> В каждом городе — свой бонус и свой страх.</p>
       <figure class="photo neon">
-        <img src="img/tour-list.jpg" alt="Афиша тура Крика со списком городов и дат">
+        <img src="img/cover-list.jpg" alt="Афиша тура Крика со списком городов и дат">
         <figcaption>Смотри расписание — не опоздай на собственный страх.</figcaption>
       </figure>
     </div>
     <aside>
       <figure class="photo grain halftone">
-        <img src="img/ad-shovel-banner.jpg" alt="Объявление: Куплю лопату — дорого! (для терапевтических нужд)">
+        <img src="img/buy-shovel.jpg" alt="Объявление: Куплю лопату — дорого! (для терапевтических нужд)">
         <figcaption>Объявление: Куплю лопату — дорого! (для терапевтических нужд).</figcaption>
       </figure>
     </aside>
@@ -208,13 +189,14 @@ input[type="text"],input[type="password"]{font:16px/1.2 "Montserrat",sans-serif}
 
   <hr class="rule">
 
+  <!-- Истории -->
   <section class="grid">
     <div>
       <h2>Биография Крика — истории из жизни</h2>
       <h3>Крик на рынке</h3>
       <p>В один момент у Крика закончились деньги и он решил пойти на подработку. Взяли на рынок торговать бананами — его внешний вид как и отпугивал, так и ровно заманивал новых клиентов. Это были весёлые деньки, особенно наблюдая как Крик ведёт себя в обществе и как он решил поднять крипту на рабочем месте, в надежде на более эффективный способ заработка.</p>
       <figure class="photo grain vignette halftone">
-        <img src="img/market-krik-bananas.jpg" alt="Крик торгует бананами и следит за графиками на ноутбуке">
+        <img src="img/krik-bananas.jpg" alt="Крик торгует бананами и следит за графиками на ноутбуке">
         <figcaption>«Необычный мужик! Весёлый, ножом машет как профи — круто!» • «Всегда первым делом иду к нему…» • «Иногда кажется, что он на чём-то тяжёлом, но я не осуждаю».</figcaption>
       </figure>
     </div>
@@ -222,7 +204,7 @@ input[type="text"],input[type="password"]{font:16px/1.2 "Montserrat",sans-serif}
       <h3>Крик в музее</h3>
       <p>Наш журналист предложил Крику сходить в музей античного искусства, на что тот радостно согласился. Больше всего его заинтересовали скульптуры — с одной из них он и сфотографировался.</p>
       <figure class="photo vignette">
-        <img src="img/museum-krik-sisyphus.jpg" alt="Крик в музее рядом со скульптурой Сизифа">
+        <img src="img/krik-sisyphus.jpg" alt="Крик в музее рядом со скульптурой Сизифа">
         <figcaption>Подпись к фото: «А нахуй он валун на гору катит?»</figcaption>
       </figure>
     </aside>
@@ -230,6 +212,7 @@ input[type="text"],input[type="password"]{font:16px/1.2 "Montserrat",sans-serif}
 
   <hr class="rule">
 
+  <!-- Монолог -->
   <section>
     <h2>Цитаты, рассказ о себе (от самого Крика)</h2>
     <p>Пришла и моя очередь о себе рассказать! А то больно разболтались выше, надо будет им языки подровнять. Это не дело — газета продолжается, а никто всё ещё не умер.</p>
@@ -244,12 +227,12 @@ input[type="text"],input[type="password"]{font:16px/1.2 "Montserrat",sans-serif}
 
   <hr class="rule">
 
-  <!-- Глитч-зона -->
+  <!-- Слухи (глитч-зона) -->
   <section class="grid glitch-zone">
     <div>
       <h2>Слухи и домыслы</h2>
       <figure class="photo speech">
-        <img src="img/trash-scare-street.jpg" alt="Крик выскакивает у мусорного бака, рабочий удивлён (оба мультяшные)">
+        <img src="img/krik-bin.jpg" alt="Крик выскакивает у мусорного бака, рабочий удивлён (оба мультяшные)">
         <div class="bubble b1">— Бу.</div>
         <div class="bubble b2">— Ты чо, ахуел?</div>
         <figcaption>Стенограмма редакции.</figcaption>
@@ -261,13 +244,13 @@ input[type="text"],input[type="password"]{font:16px/1.2 "Montserrat",sans-serif}
 
     <aside>
       <figure class="photo grain halftone">
-        <img src="img/classroom-krik.jpg" alt="Крик сидит в аудитории и оборачивается">
+        <img src="img/krik-class.jpg" alt="Крик сидит в аудитории и оборачивается">
         <figcaption>Комментарий Крика: «да, понял по итогу нихуя».</figcaption>
       </figure>
     </aside>
   </section>
 
-  <!-- Тёмный финал + глитчи -->
+  <!-- Тёмный финал -->
   <section class="dark glitch-zone" style="margin-top:18px; padding:16px; background:#0d0d0d; color:#eaeaea; border:1px solid #222">
     <h2>…Темнее к концовке</h2>
     <p>Ладно, вы действительно думали, что просто возьму и уйду отсюда? Хрена лысого! Продолжаю свою речь, ребятки, не буду вас оставлять грустить.</p>
@@ -280,7 +263,7 @@ input[type="text"],input[type="password"]{font:16px/1.2 "Montserrat",sans-serif}
 
     <div style="margin-top:12px">
       <label for="secret" class="small">Впиши его имя:</label><br>
-      <input id="secret" type="text" placeholder="подсказка: не бегает…" style="padding:9px 10px; width:260px; margin-right:6px">
+      <input id="secret" type="text" placeholder="подсказка: не бегает… 🐌" style="padding:9px 10px; width:260px; margin-right:6px">
       <button id="checkBtn" class="btn">Проверить</button>
       <div id="hint" class="small" style="margin-top:6px; color:#bbb"></div>
     </div>
@@ -289,9 +272,9 @@ input[type="text"],input[type="password"]{font:16px/1.2 "Montserrat",sans-serif}
 </div><!-- /.page -->
 
 <script>
-/* === Настройки === */
+/* === ПАРАМЕТРЫ === */
 const ENTRY_CODE = "28082003";
-const NEXT_URL = "https://example.com/next-site"; // поставь ссылку на следующий сайт
+const NEXT_URL = "https://example.com/next-site"; // <-- замени на ссылку «Проводника»
 
 /* === ВХОД ПО КОДУ === */
 (function setupGate(){
@@ -326,7 +309,7 @@ const NEXT_URL = "https://example.com/next-site"; // поставь ссылку
     const y = Math.max(0, Math.min(max, window.scrollY || window.pageYOffset || 0));
     let t = max > 0 ? (y / max) : 0;
     t = Math.pow(t, 1.15);
-    const cap = 0.85;
+    const cap = 0.85; // максимум темноты
     root.style.setProperty('--darkness', (t * cap).toFixed(3));
   }
   updateDark();
@@ -334,7 +317,7 @@ const NEXT_URL = "https://example.com/next-site"; // поставь ссылку
   window.addEventListener('resize', updateDark);
 })();
 
-/* === Ступенчатые глитчи по секциям === */
+/* === Ступенчатые глитчи при прокрутке === */
 (function(){
   const zones = document.querySelectorAll('.glitch-zone');
   if(!('IntersectionObserver' in window) || zones.length===0) return;
@@ -352,7 +335,7 @@ const NEXT_URL = "https://example.com/next-site"; // поставь ссылку
   zones.forEach(z => io.observe(z));
 })();
 
-/* === Финал: слова из темноты после правильного ответа === */
+/* === Финал: слова из темноты === */
 function playFinal(){
   const blackout = document.getElementById('blackout');
   const finalText = document.getElementById('finalText');
