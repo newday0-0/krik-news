@@ -11,7 +11,7 @@
     background: url('cover-blank.jpg') no-repeat center center fixed;
     background-size: cover;
     color: white;
-    transition: background 1s ease, filter 1s ease;
+    transition: filter 0.5s ease;
   }
 
   .container {
@@ -87,19 +87,14 @@
   }
 
   @media(max-width: 600px) {
-    .container {
-      padding: 10px;
-    }
-
-    input[type="text"] {
-      max-width: 100%;
-    }
+    .container { padding: 10px; }
+    input[type="text"] { max-width: 100%; }
   }
 </style>
 </head>
 <body>
 
-<div class="container" id="access">
+<div class="container visible" id="access">
   <h1>Доступ к выпуску</h1>
   <p>Введите код доступа, чтобы прочитать свежий номер.</p>
   <input type="text" id="codeInput" placeholder="Введите код">
@@ -143,22 +138,20 @@
 
 <script>
   const correctCode = "1234"; // стандартный код
-  const snailCode = "улитка"; // специальный код для перехода на final.html
+  const snailCode = "улитка"; // код для final.html
   const codeInput = document.getElementById("codeInput");
   const accessContainer = document.getElementById("access");
   const newsSection = document.getElementById("news");
-  const images = newsSection.querySelectorAll("img.responsive");
   const finalMessage = document.getElementById("finalMessage");
 
-  // Ввод кода
   codeInput.addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
-      const value = codeInput.value.trim();
+      const value = codeInput.value.trim().toLowerCase();
       if (value === correctCode) {
         accessContainer.style.display = "none";
         newsSection.style.display = "block";
         fadeInNews();
-      } else if (value.toLowerCase() === snailCode) {
+      } else if (value === snailCode) {
         window.location.href = "final.html";
       } else {
         alert("Неверный код доступа!");
@@ -166,14 +159,13 @@
     }
   });
 
-  // Плавное проявление блоков
   function fadeInNews() {
     newsSection.classList.add("visible");
+    const images = newsSection.querySelectorAll("img.responsive");
     images.forEach((img, i) => {
       setTimeout(() => { img.classList.add("visible"); }, i * 300);
     });
-
-    // Показываем глючную финальную часть через задержку
+    // Показываем глючную финальную часть через 2.5 сек
     setTimeout(() => { finalMessage.style.display = "block"; }, 2500);
   }
 
@@ -181,7 +173,7 @@
   window.addEventListener("scroll", () => {
     const scrollTop = window.scrollY;
     const docHeight = document.body.scrollHeight - window.innerHeight;
-    const brightness = 1 - (scrollTop / docHeight) * 0.5; // до 50% затемнения
+    const brightness = 1 - (scrollTop / docHeight) * 0.5;
     document.body.style.filter = `brightness(${brightness})`;
   });
 </script>
