@@ -2,391 +2,374 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Кричащая правда — №404</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --paper:#f4ecd7;
-  --ink:#111;
-  --rule:#b9b19a;
-  --darkness:0; /* 0..1 — мрак от скролла */
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:#fff;color:#222;font-family:"PT Serif",serif;line-height:1.6}
-img{max-width:100%;height:auto}
+  :root{
+    --paper:#f6f2e9;
+    --ink:#151515;
+    --accent:#d82222;
+    --dark:0;          /* затемнение при скролле (ставим через JS) */
+  }
 
-.page{
-  position:relative;
-  max-width:920px; margin:0 auto; padding:14px 22px 60px;
-  background:var(--paper);
-  box-shadow:0 0 0 1px #000 inset;
-  overflow-x:hidden;
-}
-/* статичное потемнение к низу */
-.page:before{
-  content:""; position:absolute; inset:0; pointer-events:none;
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,0) 55%, rgba(0,0,0,.06) 100%),
-    radial-gradient(rgba(0,0,0,.03) 1px, transparent 1px) 0 0/3px 3px,
-    radial-gradient(rgba(0,0,0,.015) 1px, transparent 1px) 1px 1px/4px 4px;
-  mix-blend-mode:multiply;
-}
-/* динамическое потемнение от скролла */
-.page::after{
-  content:""; position:absolute; inset:0; pointer-events:none;
-  background:
-    linear-gradient(to bottom,
-      rgba(0,0,0,0) 10%,
-      rgba(0,0,0, calc(var(--darkness) * .35)) 45%,
-      rgba(0,0,0, calc(var(--darkness) * .65)) 75%,
-      rgba(0,0,0, var(--darkness)) 100%);
-  mix-blend-mode:multiply; transition:background .2s linear;
-}
+  /* БАЗА */
+  html,body{margin:0;padding:0;background:#000;color:var(--ink);font-family: ui-serif, Georgia, "Times New Roman", serif;line-height:1.55}
+  .page{
+    background:#f6f2e9 url('cover-blank.jpg') center top / cover no-repeat fixed;
+    min-height:100svh;
+    position:relative;
+    overflow-x:hidden;
+  }
 
-header.masthead{position:relative; z-index:2}
-.cover{
-  background:#000 url("img/cover-blank.jpg") center/cover no-repeat;
-  height:160px; margin:0 -22px 10px; border-bottom:3px solid #000;
-}
-.h1{font:700 40px/1 "Playfair Display",serif; letter-spacing:.5px; margin:12px 0 6px; text-transform:uppercase}
-.sub{font:700 15px/1.3 "Montserrat",sans-serif; letter-spacing:.06em}
-.meta{font:600 13px/1.3 "Montserrat",sans-serif; color:#444; margin-top:6px}
+  /* Плавный вход всего контента */
+  .reveal {opacity:0; transform: translateY(10px); filter: blur(2px); transition: opacity .8s ease, transform .8s ease, filter .8s ease;}
+  .reveal.show {opacity:1; transform:none; filter:none;}
 
-hr.rule{border:0;border-top:1px solid var(--rule); margin:18px 0}
-h2{font:700 28px/1.2 "Playfair Display",serif; margin:16px 0 8px}
-h3{font:700 20px/1.2 "Montserrat",sans-serif; margin:12px 0 6px}
-p{margin:10px 0}
+  /* Градиентное потемнение с прокруткой */
+  .darken{
+    pointer-events:none;
+    position:fixed; inset:0;
+    background:linear-gradient(to bottom, rgba(0,0,0,var(--dark)*.00) 0%,
+                                        rgba(0,0,0,var(--dark)*.20) 35%,
+                                        rgba(0,0,0,var(--dark)*.45) 65%,
+                                        rgba(0,0,0,var(--dark)*.70) 100%);
+    mix-blend-mode:multiply; transition: background .2s linear;
+    z-index:3;
+  }
 
-.grid{display:grid; gap:14px}
-@media(min-width:800px){ .grid{grid-template-columns:1.2fr .8fr} }
+  /* Газетная верстка */
+  .container{max-width:960px;margin:0 auto;padding:24px}
+  header{padding:28px 16px 18px; text-align:center; position:relative}
+  header .tiny{font-size:14px; letter-spacing:.06em}
+  h1{font-family: ui-serif, Georgia, "Times New Roman", serif; font-weight:900; font-size:44px; margin:0 0 6px; letter-spacing:.02em}
+  h2{font-size:26px; margin:28px 0 10px}
+  h3{font-size:21px; margin:20px 0 8px}
+  .hr{height:1px;background:#0002;margin:18px 0}
 
-figure{margin:10px 0}
-figcaption{font-size:12px;color:#555;border-top:1px solid var(--rule);padding-top:4px;font-style:italic}
+  .lead-badge{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    display:inline-block; padding:6px 10px; border:1px solid #0005; border-radius:3px;
+    background:#fff7; backdrop-filter: blur(2px);
+  }
 
-/* стили фоток */
-.photo{position:relative; overflow:hidden; border:1px solid #d8d1ba; background:#fff}
-.photo img{display:block; width:100%; filter:contrast(1.05) saturate(.95)}
-.photo.grain:after{
-  content:""; position:absolute; inset:0; pointer-events:none;
-  background:
-    radial-gradient(rgba(0,0,0,.035) 1px, transparent 1px) 0 0/3px 3px,
-    radial-gradient(rgba(0,0,0,.02) 1px, transparent 1px) 1px 1px/4px 4px;
-  mix-blend-mode:multiply; opacity:.9;
-}
-.photo.vignette:before{
-  content:""; position:absolute; inset:-10%; pointer-events:none;
-  background:radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,.22) 100%);
-}
-.photo.halftone img{filter:grayscale(.15) contrast(1.08) saturate(.9)}
-.neon img{filter:drop-shadow(0 0 6px #39a0ff) drop-shadow(0 0 14px #0b66ff)}
+  figure{margin:18px 0}
+  figure img{width:100%; display:block; border:1px solid #0003; background:#fff}
+  figcaption{font-size:14px; color:#333; margin-top:6px; font-style:italic}
 
-/* реплики */
-.speech{position:relative}
-.bubble{
-  position:absolute; max-width:46%; background:#fff; border:1px solid #111; padding:6px 8px;
-  font-size:14px; line-height:1.2; border-radius:12px; box-shadow:0 1px 0 #0002;
-}
-.bubble:after{content:""; position:absolute; width:0;height:0;border:8px solid transparent;}
-.b1{top:8%; left:8%}
-.b1:after{left:10px; bottom:-16px; border-top-color:#111; transform:translateY(1px)}
-.b2{bottom:10%; right:8%}
-.b2:after{right:10px; top:-16px; border-bottom-color:#111; transform:translateY(-1px)}
+  .note{font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";}
 
-/* глитчи */
-.glitch-zone{position:relative; isolation:isolate}
-.glitch-zone::after{
-  content:""; position:absolute; inset:-4px; pointer-events:none; opacity:0;
-  background:
-    repeating-linear-gradient(0deg, rgba(255,255,255,.0) 0 3px, rgba(0,0,0,.07) 3px 6px),
-    repeating-linear-gradient(90deg, rgba(255,0,0,.04) 0 2px, rgba(0,0,255,.04) 2px 4px);
-  mix-blend-mode:overlay; filter:contrast(1.1) saturate(1.1);
-  transition:opacity .15s;
-}
-.glitch-zone.glitch-active::after{ opacity:.9; animation:glScan 700ms steps(6) infinite; }
-@keyframes glScan{ 0%{transform:translateY(-2px)} 50%{transform:translateY(1px)} 100%{transform:translateY(-2px)} }
-.glitch-zone h2,.glitch-zone h3{position:relative}
-.glitch-zone.glitch-active h2,.glitch-zone.glitch-active h3{animation:glJit 420ms steps(2) infinite}
-@keyframes glJit{ 0%{transform:translateX(0) skewX(0)} 50%{transform:translateX(-0.5px) skewX(-0.2deg)} 100%{transform:translateX(0) skewX(0)} }
+  /* Врезка-объявление (баннер) */
+  .banner{
+    background:#f2e6cf url('buy-shovel.jpg') center/cover no-repeat;
+    border:2px solid #000;
+    min-height:140px; display:flex; align-items:flex-end; justify-content:flex-end;
+  }
+  .banner .stub{background:#000a;color:#fff;padding:8px 10px;font-size:12px}
 
-/* вход по коду */
-#gate {
-  position:fixed; inset:0; background:#000; color:#eee;
-  display:flex; align-items:center; justify-content:center; z-index:10000;
-  padding:24px; text-align:center;
-}
-.gate-box {
-  max-width:520px; width:100%;
-  border:1px solid #222; background:#0b0b0b; padding:24px 18px;
-  box-shadow:0 10px 40px rgba(0,0,0,.6);
-}
-.gate-title { font-family:"Playfair Display",serif; font-size:28px; margin:0 0 6px; }
-.gate-sub { color:#bbb; font-size:14px; margin:0 0 14px; }
-.gate-input { width:100%; max-width:360px; padding:10px 12px; font-size:16px; border:1px solid #666; background:#111; color:#eee; }
-.gate-btn { margin-top:10px; padding:10px 14px; border:1px solid #eee; background:#111; color:#eee; cursor:pointer; }
-.gate-hint { margin-top:8px; font-size:14px; color:#aaa; }
+  /* Раздел «Слухи» */
+  .callout{border:1px dashed #0007; padding:14px 16px; background:#fff9}
 
-/* финальный blackout */
-#blackout{
-  display:none; position:fixed; inset:0; z-index:9000;
-  background:#000; color:#eee; align-items:center; justify-content:center; text-align:center; padding:20px;
-}
-.final-wrap{max-width:760px; margin:auto}
-.final-line{display:block; margin:10px 0}
-.word{opacity:0; filter:blur(6px); transition:opacity .4s ease, filter .6s ease; display:inline-block}
-.word.show{opacity:1; filter:blur(0)}
+  /* ГЛИТЧ-эффекты */
+  .glitchy{position:relative; display:inline-block}
+  .glitchy::before,.glitchy::after{
+    content:attr(data-text); position:absolute; left:0; top:0;
+    clip-path:inset(0 0 0 0); opacity:.85; mix-blend-mode:lighten; pointer-events:none
+  }
+  .glitchy::before{color:#0ff; transform:translate(0,0)}
+  .glitchy::after{color:#f0f; transform:translate(0,0)}
+  .glitch-active .glitchy::before{animation:gl1 .8s steps(2,end) infinite}
+  .glitch-active .glitchy::after{animation:gl2 1s steps(2,end) infinite}
+  @keyframes gl1{50%{transform:translate(-2px,0)}}
+  @keyframes gl2{50%{transform:translate(2px,0)}}
 
-input[type="text"],input[type="password"]{font:16px/1.2 "Montserrat",sans-serif}
-.btn{display:inline-block; padding:9px 14px; border:1px solid #000; background:#fff; cursor:pointer; font-weight:600}
-.small{font-size:13px;color:#555}
+  /* Оверлеи: 1) вход по коду, 2) «улитка» */
+  .overlay{
+    position:fixed; inset:0; background:#0b0b0f; color:#fff;
+    display:grid; place-items:center; z-index:9;
+  }
+  .panel{
+    width:min(560px,92vw); background:#111; border:1px solid #333; border-radius:10px;
+    padding:22px; box-shadow:0 20px 60px #000c, inset 0 0 60px #fff1;
+  }
+  .panel h2{margin:0 0 6px; color:#fff}
+  .panel p{margin:0 0 14px; color:#ddd}
+  .panel input{width:100%; padding:12px 14px; font-size:18px; border-radius:8px; border:1px solid #555; background:#0f0f12; color:#fff}
+  .panel button{
+    margin-top:12px; padding:10px 14px; font-size:16px; border:0; border-radius:8px;
+    background:#e12626; color:#fff; cursor:pointer
+  }
+  .panel .hint{font-size:12px; color:#aaa; margin-top:6px}
+
+  /* Блок «улитка»: слова появляются по одному */
+  .snail-words{display:flex; flex-wrap:wrap; gap:.45em; font-size:22px; color:#f3f3f3}
+  .snail-words span{opacity:0; transform:translateY(6px); transition:opacity .5s ease, transform .5s ease}
+
+  /* Плавающая шапка */
+  .mast{
+    position:sticky; top:0; z-index:2; backdrop-filter: blur(3px);
+    background:linear-gradient(#fffaf3f5,#fffaf3d8 60%,#fffaf300);
+    border-bottom:1px solid #0001; padding:10px 16px
+  }
+  .mast small{display:block; font-size:12px; letter-spacing:.08em}
+  .mast strong{font-size:14px}
+
+  /* Мобильные мелочи */
+  @media (max-width:640px){
+    h1{font-size:34px}
+    h2{font-size:22px}
+  }
 </style>
 </head>
 <body>
 
-<!-- ===== ВХОД ПО КОДУ ===== -->
-<div id="gate">
-  <div class="gate-box">
-    <div class="gate-title">Вход по коду</div>
-    <div class="gate-sub">Введите код, полученный у Tails-бота</div>
-    <input id="gateInput" class="gate-input" type="password" inputmode="numeric" placeholder="например, 28082003">
-    <div><button id="gateBtn" class="gate-btn">Войти</button></div>
-    <div id="gateHint" class="gate-hint"></div>
+<!-- Оверлей №1: ВХОД ПО КОДУ -->
+<div id="gate" class="overlay">
+  <div class="panel">
+    <h2>🔒 Введите код доступа</h2>
+    <p class="note">Подсказка: тот же, что вы отправляли Тейлзу‑боту.</p>
+    <input id="gateInput" inputmode="numeric" autocomplete="one-time-code" placeholder="8 цифр" maxlength="8">
+    <button id="gateBtn">Войти</button>
+    <div id="gateMsg" class="hint"></div>
   </div>
 </div>
 
-<!-- ===== BLACKOUT ФИНАЛ ===== -->
-<div id="blackout">
-  <div class="final-wrap" id="finalText"></div>
-</div>
+<div class="page" id="page">
+  <div class="darken" id="darken"></div>
 
-<div class="page">
-  <header class="masthead">
-    <div class="cover" aria-hidden="true"></div>
-    <div class="h1">КРИЧАЩАЯ ПРАВДА</div>
-    <div class="sub">AT ONE, TWO, THREE — PANIC!</div>
-    <div class="meta">№ 404, выпуск не найден • 30 августа 2025</div>
-    <hr class="rule">
+  <div class="mast reveal">
+    <small>AT ONE, TWO, THREE — PANIC!</small>
+    <strong>№ 404, выпуск не найден • 30 августа 2025</strong>
+  </div>
+
+  <header class="container reveal">
+    <h1>КРИЧАЩАЯ ПРАВДА</h1>
+    <div class="lead-badge">at one, two, three — PANIC!</div>
   </header>
 
-  <!-- Афиша -->
-  <section class="grid">
-    <div>
+  <main class="container">
+
+    <!-- ТУР -->
+    <section class="reveal">
       <h2>Тур Крика: от подвала до улицы</h2>
-      <p><b>Афиша‑2025.</b> В каждом городе — свой бонус и свой страх.</p>
-      <figure class="photo neon">
-        <img src="img/cover-list.jpg" alt="Афиша тура Крика со списком городов и дат">
-        <figcaption>Смотри расписание — не опоздай на собственный страх.</figcaption>
+      <p class="note">Афиша‑2025. В каждом городе — свой бонус и свой страх.</p>
+      <figure>
+        <img src="cover-list.jpg" alt="Афиша с городами и датами">
       </figure>
-    </div>
-    <aside>
-      <figure class="photo grain halftone">
-        <img src="img/buy-shovel.jpg" alt="Объявление: Куплю лопату — дорого! (для терапевтических нужд)">
-        <figcaption>Объявление: Куплю лопату — дорого! (для терапевтических нужд).</figcaption>
-      </figure>
-    </aside>
-  </section>
+      <div class="hr"></div>
+    </section>
 
-  <hr class="rule">
-
-  <!-- Истории -->
-  <section class="grid">
-    <div>
+    <!-- БИО / ИСТОРИИ -->
+    <section class="reveal">
       <h2>Биография Крика — истории из жизни</h2>
+
       <h3>Крик на рынке</h3>
       <p>В один момент у Крика закончились деньги и он решил пойти на подработку. Взяли на рынок торговать бананами — его внешний вид как и отпугивал, так и ровно заманивал новых клиентов. Это были весёлые деньки, особенно наблюдая как Крик ведёт себя в обществе и как он решил поднять крипту на рабочем месте, в надежде на более эффективный способ заработка.</p>
-      <figure class="photo grain vignette halftone">
-        <img src="img/krik-bananas.jpg" alt="Крик торгует бананами и следит за графиками на ноутбуке">
-        <figcaption>«Необычный мужик! Весёлый, ножом машет как профи — круто!» • «Всегда первым делом иду к нему…» • «Иногда кажется, что он на чём-то тяжёлом, но я не осуждаю».</figcaption>
+      <figure>
+        <img src="krik-bananas.jpg" alt="Крик сидит за ноутбуком рядом с бананами и криптографиками">
       </figure>
-    </div>
-    <aside>
+      <h3>Комментарий очевидцев</h3>
+      <ul>
+        <li>«Необычный мужик! Весёлый, ножом машет как профи — круто!»</li>
+        <li>«Всегда первым делом иду к нему, когда отправляюсь за покупками. Заряд мотивации и сил возникает мгновенно, когда он замахивается на вас ножом»</li>
+        <li>«Иногда мне кажется, что он на чём-то тяжёлом… но я не осуждаю: мне самому кажется, что я сам на чём-то тяжёлом».</li>
+      </ul>
+
+      <figure class="banner">
+        <span class="stub">объявление</span>
+      </figure>
+      <p class="note" style="text-align:center">Куплю лопату — дорого! (для терапевтических нужд)</p>
+
       <h3>Крик в музее</h3>
-      <p>Наш журналист предложил Крику сходить в музей античного искусства, на что тот радостно согласился. Больше всего его заинтересовали скульптуры — с одной из них он и сфотографировался.</p>
-      <figure class="photo vignette">
-        <img src="img/krik-sisyphus.jpg" alt="Крик в музее рядом со скульптурой Сизифа">
-        <figcaption>Подпись к фото: «А нахуй он валун на гору катит?»</figcaption>
+      <p>Наш журналист предложил Крику сходить в музей античного искусства, на что тот радостно согласился. Казалось, что при виде Крика все взгляды посетителей музея сразу переключались на него. Но, что самое главное — Крика очень интересовали скульптуры. И с одной из них сфотографировался, попросив подписать фотографию вопросом, что он задал сам при её виде.</p>
+      <figure>
+        <img src="krik-sisyphus.jpg" alt="Крик задумчиво смотрит на Сизифа со скалой">
+        <figcaption>«А нахуй он валун на гору катит?»</figcaption>
       </figure>
-    </aside>
-  </section>
 
-  <hr class="rule">
+      <div class="hr"></div>
+    </section>
 
-  <!-- Монолог -->
-  <section>
-    <h2>Цитаты, рассказ о себе (от самого Крика)</h2>
-    <p>Пришла и моя очередь о себе рассказать! А то больно разболтались выше, надо будет им языки подровнять. Это не дело — газета продолжается, а никто всё ещё не умер.</p>
-    <p><b>Меня зовут Крик!</b> Моя профессия — сеять ужас. Моё хобби — заказывать шмот на вайлдберриз и не забирать.</p>
-    <p>Бывают у меня творческие кризисы. И, знаете, в таком случае говорят, что время лечит. <b>НО Я — ПРЕДПОЧИТАЮ СКАЛЬПЕЛЬ!</b></p>
-    <p>И говоря о лечении — вот вы, люди, стремитесь к вершинам… А я — к кухонному ящику. Там мой терапевт. Он говорит «резать!», и я такой: «кого?!».</p>
-    <p>На прошлой неделе был в больнице… Глядя на мой скальпель, врач рассмеялся и сказал: «АХАХА ЧТО ЗА МЕТОДЫ ЛЕЧЕНИЯ». Мы подружились.</p>
-    <p>И ещё один день с работы запомнился, давно было… Вот уже скоро годовщина с того момента, как та женщина орёт — буду отмечать.</p>
-    <p>Что ж ещё рассказать напоследок, хм. Вчера сел на диван… проснулся через 3 дня. И в костюме Фредди Меркьюри. Я хз, ребят. Я тоже живу, ха-ха.</p>
-    <p><b>Ещё увидимся, ведь я в вечном турне по вашим страхам!</b></p>
-  </section>
+    <!-- МОНОЛОГ КРИКА -->
+    <section class="reveal">
+      <h2>Цитаты, рассказ о себе (от самого Крика)</h2>
 
-  <hr class="rule">
+      <p>Пришла и моя очередь о себе рассказать! А то больно разболтались выше, надо будет им языки подровнять. Это не дело — газета продолжается, а никто всё ещё не умер.</p>
 
-  <!-- Слухи (глитч-зона) -->
-  <section class="grid glitch-zone">
-    <div>
+      <p><strong>Меня зовут Крик!</strong> Моя профессия — сеять ужас. Моё хобби — заказывать шмот на вайлдберриз и не забирать.</p>
+
+      <p>Бывают у меня творческие кризисы. И, знаете, в таком случае говорят, что время лечит. <strong>НО Я — ПРЕДПОЧИТАЮ СКАЛЬПЕЛЬ!</strong></p>
+
+      <p>И говоря о лечении — вот вы, люди, стремитесь к вершинам… А я — к кухонному ящику. Там мой терапевт. Он говорит «резать!», и я такой: «кого?!».</p>
+
+      <p>На прошлой неделе был в больнице. Конечно, я решил не терять время и не пропускать рабочий день, взяв инструменты с собой — в частности, скальпеля. В больницу шёл всё-таки! Надо быть под стать окружению. Зашёл в первый попавшийся кабинет, и ожидал чего угодно: криков, воплей, мольбы о помощи, но... глядя на мой скальпель, врач рассмеялся и сказал: «АХАХА ЧТО ЗА МЕТОДЫ ЛЕЧЕНИЯ». Мы подружились.</p>
+
+      <p>И ещё один день с работы запомнился, давно было. Ночь, слабо освещённый переулок, и идёт женщина вдали — всё как обычно для меня, я и побежал к ней. Подбегаю и, представьте — РОНЯЮ НОЖ! И именно с этого момента та женщина заверещала, она никак не отреагировала в первые секунды моего появления до! Ох, как она верещала, что за услада для ушей... честно, это был даже не визг, а ОР, который я ранее никогда не слышал ни от кого. Как же это было классно... Вот уже скоро годовщина с того момента, как та женщина орёт — буду отмечать.</p>
+
+      <p>Что ж ещё рассказать напоследок, хм. Вчера сел на диван… проснулся через 3 дня. И в костюме Фредди Меркьюри. Я хз, ребят. Я тоже живу, ха‑ха.</p>
+
+      <p>Ещё увидимся, ведь я в вечном турне по вашим страхам!</p>
+
+      <div class="hr"></div>
+    </section>
+
+    <!-- СЛУХИ И ДОМЫСЛЫ -->
+    <section class="reveal">
       <h2>Слухи и домыслы</h2>
-      <figure class="photo speech">
-        <img src="img/krik-bin.jpg" alt="Крик выскакивает у мусорного бака, рабочий удивлён (оба мультяшные)">
-        <div class="bubble b1">— Бу.</div>
-        <div class="bubble b2">— Ты чо, ахуел?</div>
-        <figcaption>Стенограмма редакции.</figcaption>
-      </figure>
 
-      <p>«Вот хуесос. Ладно, отвечу тем же» — рецензия Крика на налоговую. Работники остались без пальцев.</p>
-      <p>«Ну я же психбольная: сначала делаю, потом думаю» — внутренний регламент редакции после работы с Криком.</p>
-    </div>
+      <div class="callout">
+        <p>— Бу.<br>— Ты чо, ахуел?<br><span class="note">(диалог у мусорки, стенограмма редакции)</span></p>
+        <figure>
+          <img src="krik-bin.jpg" alt="Крик пугает работника у мусорки">
+        </figure>
+        <p>«Вот хуесос. Ладно, отвечу тем же» — рецензия Крика на налоговую. Работники остались без пальцев.</p>
+        <p>«Ну я же психбольная: сначала делаю, потом думаю» — внутренний регламент редакции после работы с Криком.</p>
+        <figure>
+          <img src="krik-class.jpg" alt="Крик сидит в школе и оборачивается">
+          <figcaption>«да, понял по итогу нихуя»</figcaption>
+        </figure>
+      </div>
 
-    <aside>
-      <figure class="photo grain halftone">
-        <img src="img/krik-class.jpg" alt="Крик сидит в аудитории и оборачивается">
-        <figcaption>Комментарий Крика: «да, понял по итогу нихуя».</figcaption>
-      </figure>
-    </aside>
-  </section>
+      <div class="hr"></div>
+    </section>
 
-  <!-- Тёмный финал -->
-  <section class="dark glitch-zone" style="margin-top:18px; padding:16px; background:#0d0d0d; color:#eaeaea; border:1px solid #222">
-    <h2>…Темнее к концовке</h2>
-    <p>Ладно, вы действительно думали, что просто возьму и уйду отсюда? Хрена лысого! Продолжаю свою речь, ребятки, не буду вас оставлять грустить.</p>
-    <p>Я люблю свою работу и жизнь. Это действительно приносит мне удовольствие. Но... есть один момент, что меня гложит.</p>
-    <p>Вот вы... бегаете от меня. Пищите. Молите о пощаде. — это правильно, и это приносит мне неописуемое удовольствие.</p>
-    <p>Однако… однажды я встретил нечто. Оно не испугалось. Не торопилось. За полчаса преодолевает сантиметр. Оно никогда не бежит. Оно… ползёт.</p>
+    <!-- ФИНАЛ: ГЛИТЧ + УЛИТКА -->
+    <section class="reveal" id="final">
+      <h2>…</h2>
+      <p><strong>Ладно, вы действительно думали, что просто возьму и уйду отсюда?</strong> Хрена лысого! Продолжаю свою речь, ребятки, не буду вас оставлять грустить.</p>
+      <p>Я люблю свою работу и жизнь. Это действительно приносит мне удовольствие. Но... есть один момент, что меня гложит.</p>
+      <p>Вот вы... бегаете от меня. Пищите. Молите о пощаде. — это правильно, и это приносит мне неописуемое удовольствие.</p>
+      <p>Однако… однажды я встретил нечто. Оно не испугалось. Не торопилось. За полчаса преодолевает сантиметр. Оно никогда не бежит. Оно… ползёт.</p>
 
-    <p style="font-weight:700; font-size:20px; letter-spacing:.02em; margin-top:16px">Оно почти как ты… Данила.</p>
-    <p>Ты ведь знаешь, о ком я. <br>Мой самый страшный кошмар. <br>Моё… проклятие. <br>Ты знаешь моего врага в лицо?</p>
+      <div id="glitchZone">
+        <p class="glitchy" data-text="Оно почти как ты… Данила.">Оно почти как ты… Данила.</p>
+        <p class="glitchy" data-text="Ты ведь знаешь, о ком я.">Ты ведь знаешь, о ком я.</p>
+        <p class="glitchy" data-text="Мой самый страшный кошмар.">Мой самый страшный кошмар.</p>
+        <p class="glitchy" data-text="Моё… проклятие.">Моё… проклятие.</p>
+        <p class="glitchy" data-text="Ты знаешь моего врага в лицо?">Ты знаешь моего врага в лицо?</p>
+      </div>
 
-    <div style="margin-top:12px">
-      <label for="secret" class="small">Впиши его имя:</label><br>
-      <input id="secret" type="text" placeholder="подсказка: не бегает… 🐌" style="padding:9px 10px; width:260px; margin-right:6px">
-      <button id="checkBtn" class="btn">Проверить</button>
-      <div id="hint" class="small" style="margin-top:6px; color:#bbb"></div>
-    </div>
-  </section>
+      <div class="panel" style="background:#0b0b10;border-color:#222; margin-top:14px">
+        <p style="color:#ddd;margin:0 0 8px">Напиши его имя:</p>
+        <input id="snailInput" placeholder="подсказка: 🐌" style="background:#101015;color:#fff;border:1px solid #333">
+        <button id="snailBtn">Проверить</button>
+        <div id="snailMsg" class="hint"></div>
+      </div>
 
-</div><!-- /.page -->
+      <!-- Слова после правильного ответа -->
+      <div id="snailWords" class="snail-words" style="margin-top:14px; display:none">
+        <span>Ладно…</span><span>Ты</span><span>узнал.</span><span>Похоже,</span><span>теперь</span><span>ты</span><span>готов.</span>
+        <span>Но</span><span>не</span><span>говори</span><span>ей,</span><span>что</span><span>я</span><span>тебе</span><span>это</span><span>сказал.</span>
+      </div>
+
+      <p id="nextLink" style="display:none; margin-top:12px">
+        <a href="#" class="note" onclick="alert('Здесь будет ссылка на следующий сайт‑Проводник. Обсудим позже ✨'); return false;">Продолжить →</a>
+      </p>
+    </section>
+  </main>
+</div>
 
 <script>
-/* === ПАРАМЕТРЫ === */
-const ENTRY_CODE = "28082003";
-const NEXT_URL = "https://example.com/next-site"; // <-- замени на ссылку «Проводника»
-
-/* === ВХОД ПО КОДУ === */
-(function setupGate(){
+/* ===== ВХОД ПО КОДУ ===== */
+(function(){
+  const ok = localStorage.getItem('krik_gate_ok') === '1';
   const gate = document.getElementById('gate');
   const input = document.getElementById('gateInput');
   const btn = document.getElementById('gateBtn');
-  const hint = document.getElementById('gateHint');
+  const msg = document.getElementById('gateMsg');
 
-  if (sessionStorage.getItem('krik_gate_ok') === '1') {
-    gate.style.display = 'none';
-    return;
+  function pass(){
+    gate.style.display='none';
+    localStorage.setItem('krik_gate_ok','1');
+    // старт плавного появления первого экрана
+    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
   }
-  function tryOpen(){
-    const val = (input.value || '').replace(/\s+/g,'').trim();
-    if (val === ENTRY_CODE) {
-      sessionStorage.setItem('krik_gate_ok','1');
-      gate.style.display = 'none';
+
+  if(ok){ pass(); } else {
+    gate.style.display='grid';
+    btn.addEventListener('click', check);
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter') check(); });
+  }
+
+  function check(){
+    const v = (input.value||'').trim();
+    if(v === '28082003'){
+      msg.textContent = 'Добро пожаловать.';
+      pass();
     } else {
-      hint.textContent = "Неверно. Подсказка: дата, которую знает бот.";
+      msg.textContent = 'Неверно. Попробуй ещё.';
+      msg.style.color = '#ffb4b4';
     }
   }
-  btn.addEventListener('click', tryOpen);
-  input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') tryOpen(); });
 })();
 
-/* === Потемнение от скролла === */
+/* ===== ПОСТЕПЕННОЕ ПОТЕМНЕНИЕ ПРИ СКРОЛЛЕ ===== */
 (function(){
-  const root = document.documentElement;
-  const page = document.querySelector('.page');
-  function updateDark(){
-    const max = page.scrollHeight - window.innerHeight;
-    const y = Math.max(0, Math.min(max, window.scrollY || window.pageYOffset || 0));
-    let t = max > 0 ? (y / max) : 0;
-    t = Math.pow(t, 1.15);
-    const cap = 0.85; // максимум темноты
-    root.style.setProperty('--darkness', (t * cap).toFixed(3));
+  const d = document.getElementById('darken');
+  function upd(){
+    const h = document.documentElement.scrollHeight - innerHeight;
+    const p = h>0 ? Math.min(1, scrollY / h) : 0;
+    // от светлого к темнее к низу
+    document.documentElement.style.setProperty('--dark', (0.8*p).toFixed(3));
   }
-  updateDark();
-  window.addEventListener('scroll', updateDark, {passive:true});
-  window.addEventListener('resize', updateDark);
+  addEventListener('scroll', upd, {passive:true});
+  addEventListener('resize', upd);
+  upd();
 })();
 
-/* === Ступенчатые глитчи при прокрутке === */
-(function(){
-  const zones = document.querySelectorAll('.glitch-zone');
-  if(!('IntersectionObserver' in window) || zones.length===0) return;
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        e.target.classList.add('glitch-active');
-        setTimeout(()=> e.target.classList.remove('glitch-active'), 600);
-        setTimeout(()=> e.target.classList.add('glitch-active'), 1000);
-        setTimeout(()=> e.target.classList.remove('glitch-active'), 1600);
-        setTimeout(()=> e.target.classList.add('glitch-active'), 2200);
-      }
-    });
-  },{ threshold: 0.35 });
-  zones.forEach(z => io.observe(z));
-})();
+/* ===== ПОКАДРОВОЕ ПОЯВЛЕНИЕ СЕКЦИЙ ===== */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('show'); observer.unobserve(e.target); }
+  })
+},{threshold:.12});
 
-/* === Финал: слова из темноты === */
-function playFinal(){
-  const blackout = document.getElementById('blackout');
-  const finalText = document.getElementById('finalText');
-  blackout.style.display = 'flex';
-  finalText.innerHTML = `
-    <span class="final-line" id="l1">Ладно… Ты узнал.</span>
-    <span class="final-line" id="l2">Похоже, теперь ты готов.</span>
-    <span class="final-line" id="l3">Но не говори ей, что я тебе это сказал.</span>
-    <button id="goNext" style="display:none;margin-top:18px;padding:10px 14px;border:1px solid #eee;background:#111;color:#eee;cursor:pointer;">Продолжить</button>
-  `;
-  ['l1','l2','l3'].forEach(id=>{
-    const node = document.getElementById(id);
-    const words = node.textContent.trim().split(/\s+/);
-    node.textContent = '';
-    words.forEach(w=>{
-      const span = document.createElement('span');
-      span.className = 'word';
-      span.textContent = w + ' ';
-      node.appendChild(span);
-    });
-  });
-  let delay = 500;
-  const allWords = Array.from(finalText.querySelectorAll('.word'));
-  allWords.forEach(w=>{
-    setTimeout(()=> w.classList.add('show'), delay);
-    delay += 180;
-  });
-  setTimeout(()=>{
-    const btn = document.getElementById('goNext');
-    btn.style.display = 'inline-block';
-    btn.addEventListener('click', ()=> window.location.href = NEXT_URL);
-  }, delay + 300);
+/* Если прошли через ворота – запустить сразу, иначе будет запущено после pass() */
+if(localStorage.getItem('krik_gate_ok')==='1'){
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 }
 
-/* === Проверка «улитки» === */
+/* ===== ГЛИТЧ АКТИВАЦИЯ в финальном блоке ===== */
 (function(){
-  const ok = ["улитка","улиточка","snail","ulitka","ulitochka"];
-  const input = document.getElementById('secret');
-  const btn = document.getElementById('checkBtn');
-  const hint = document.getElementById('hint');
-  function norm(s){ return (s||"").toLowerCase().replace(/\s+/g,'').trim(); }
-  if(btn){
-    btn.addEventListener('click', ()=>{
-      const val = norm(input.value);
-      if(ok.includes(val)){
-        playFinal();
-      } else {
-        hint.textContent = "Не то имя. Подумай о тех, кто не бегает… 🐌";
-      }
-    });
+  const final = document.getElementById('final');
+  const gz = document.getElementById('glitchZone');
+  const io = new IntersectionObserver(e=>{
+    if(e[0].isIntersecting){ document.body.classList.add('glitch-active'); }
+    else{ document.body.classList.remove('glitch-active'); }
+  },{threshold:.3});
+  io.observe(final);
+})();
+
+/* ===== ЗАГАДКА: «УЛИТКА» ===== */
+(function(){
+  const input = document.getElementById('snailInput');
+  const btn = document.getElementById('snailBtn');
+  const msg = document.getElementById('snailMsg');
+  const words = document.getElementById('snailWords');
+  const spans = Array.from(words.querySelectorAll('span'));
+  const next = document.getElementById('nextLink');
+
+  function okSequence(){
+    words.style.display='flex';
+    spans.forEach((s,i)=>setTimeout(()=>{
+      s.style.opacity=1; s.style.transform='none';
+    }, 260*i));
+    setTimeout(()=>{ next.style.display='block'; }, 260*spans.length + 400);
   }
+
+  function check(){
+    const v = (input.value||'').trim().toLowerCase();
+    const good = ['улитка','улиточка','snail','улитки','улитка🐌','🐌'];
+    if(good.includes(v) || v.replaceAll(' ','')==='улитка'){
+      msg.textContent = '…верно.';
+      msg.style.color = '#8cf59c';
+      okSequence();
+    } else {
+      msg.textContent = 'Не та тварь. Присмотрись внимательнее.';
+      msg.style.color = '#ffb4b4';
+    }
+  }
+  btn.addEventListener('click', check);
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter') check(); });
 })();
 </script>
 </body>
