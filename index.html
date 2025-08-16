@@ -95,9 +95,14 @@
     display:grid; place-items:center; z-index:9;
   }
   .panel{
-    width:min(560px,92vw); background:#111; border:1px solid #333; border-radius:10px;
-    padding:22px; box-shadow:0 20px 60px #000c, inset 0 0 60px #fff1;
-  }
+    width: 100%;         /* поле подстраивается под .panel */
+  max-width: 100%;     /* не вылезает за границы */
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  box-sizing: border-box; /* учитывает padding внутри ширины */
+}
   .panel h2{margin:0 0 6px; color:#fff}
   .panel p{margin:0 0 14px; color:#ddd}
   .panel input{width:100%; max-width:100%; box-sizing:border-box; padding:12px 14px; font-size:18px; border-radius:8px; border:1px solid #555; background:#0f0f12; color:#fff}
