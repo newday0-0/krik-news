@@ -322,8 +322,10 @@ const observer = new IntersectionObserver(entries=>{
   function pass(){
     gate.style.display='none';
     localStorage.setItem('krik_gate_ok','1');
-    // сразу переброс на финальную страницу
-    location.href = 'final.html';
+    // если мы не на final.html → переброс
+    if(!location.pathname.endsWith('final.html')){
+      location.href = 'final.html';
+    }
   }
 
   if(ok){ 
