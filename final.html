@@ -1,104 +1,66 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Финал — Кричащая правда</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Финал</title>
 <style>
-  html, body {
+  body {
     margin: 0;
-    padding: 0;
-    height: 100%;
-    background: #000;
-    color: #fff;
-    font-family: ui-serif, Georgia, "Times New Roman", serif;
+    background: black;
+    color: white;
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
     text-align: center;
-    overflow: hidden;
-  }
-
-  .container {
-    max-width: 800px;
-    padding: 24px;
-  }
-
-  h1 {
-    font-size: 36px;
-    margin-bottom: 16px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 1s ease, transform 1s ease;
+    padding: 20px;
   }
 
   p {
-    font-size: 20px;
-    margin: 12px 0;
     opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 1s ease, transform 1s ease;
+    transition: opacity 2s ease;
+    margin: 20px 0;
+    max-width: 700px;
   }
 
-  .show {
+  .visible {
     opacity: 1 !important;
-    transform: none !important;
   }
 
-  .glitchy {
-    position: relative;
-    display: inline-block;
-    color: #fff;
+  .btn {
+    display: none;
+    margin-top: 30px;
+    padding: 10px 20px;
+    background: white;
+    color: black;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 5px;
   }
-
-  .glitchy::before, .glitchy::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    clip-path: inset(0 0 0 0);
-    opacity: .85;
-    mix-blend-mode: lighten;
-    pointer-events: none;
-  }
-
-  .glitchy::before { color: #0ff; transform: translate(0,0); }
-  .glitchy::after { color: #f0f; transform: translate(0,0); }
-
-  .glitch-active .glitchy::before { animation: gl1 .8s steps(2,end) infinite; }
-  .glitch-active .glitchy::after { animation: gl2 1s steps(2,end) infinite; }
-
-  @keyframes gl1 { 50% { transform: translate(-2px,0); } }
-  @keyframes gl2 { 50% { transform: translate(2px,0); } }
 </style>
 </head>
 <body>
 
-<div class="container" id="finalContainer">
-  <h1 id="title">Ты нашёл улитку…</h1>
-  <p class="glitchy" data-text="Но это только начало.">Но это только начало.</p>
-  <p class="glitchy" data-text="Теперь приготовься к настоящему испытанию.">Теперь приготовься к настоящему испытанию.</p>
-  <p class="glitchy" data-text="Всё ещё впереди.">Всё ещё впереди.</p>
-</div>
+<p>Данила... Это был не просто выпуск.</p>
+<p>Ты должен был услышать всё.</p>
+<p>И теперь — тебе решать, что будет дальше.</p>
+
+<button class="btn" onclick="location.href='next.html'">Продолжить</button>
 
 <script>
-  // Плавное появление заголовка и текста
-  const title = document.getElementById('title');
-  const lines = Array.from(document.querySelectorAll('.glitchy'));
+  const paragraphs = document.querySelectorAll("p");
+  const button = document.querySelector(".btn");
 
-  // Заголовок появляется первым
-  setTimeout(() => { title.classList.add('show'); }, 200);
-
-  // Постепенное проявление строк с глитч-эффектом
-  lines.forEach((el, i) => {
-    setTimeout(() => {
-      el.classList.add('show');
-      document.body.classList.add('glitch-active');
-    }, 800 + i * 700);
+  paragraphs.forEach((p, i) => {
+    setTimeout(() => { p.classList.add("visible"); }, i * 3000);
   });
 
-  // Можно добавить редирект на следующую страницу через X секунд
-  // setTimeout(() => { window.location.href = 'nextpage.html'; }, 8000);
+  setTimeout(() => { button.style.display = "inline-block"; }, paragraphs.length * 3000 + 1000);
 </script>
+
 </body>
 </html>
