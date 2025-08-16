@@ -301,6 +301,16 @@ class.jpg" alt="Крик
 </div>
 
 <script>
+  /* ===== ПОКАДРОВОЕ ПОЯВЛЕНИЕ СЕКЦИЙ ===== */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ 
+      e.target.classList.add('show'); 
+      observer.unobserve(e.target); 
+    }
+  })
+},{threshold:.12});
+  
 /* ===== ВХОД ПО КОДУ ===== */
 (function(){
   const ok = localStorage.getItem('krik_gate_ok') === '1';
@@ -348,12 +358,6 @@ class.jpg" alt="Крик
   upd();
 })();
 
-/* ===== ПОКАДРОВОЕ ПОЯВЛЕНИЕ СЕКЦИЙ ===== */
-const observer = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){ e.target.classList.add('show'); observer.unobserve(e.target); }
-  })
-},{threshold:.12});
 
 /* Если прошли через ворота – запустить сразу, иначе будет запущено после pass() */
 if(localStorage.getItem('krik_gate_ok')==='1'){
