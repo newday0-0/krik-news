@@ -301,7 +301,7 @@ class.jpg" alt="Крик
 </div>
 
 <script>
-  /* ===== ПОКАДРОВОЕ ПОЯВЛЕНИЕ СЕКЦИЙ ===== */
+/* ===== ПОКАДРОВОЕ ПОЯВЛЕНИЕ СЕКЦИЙ ===== */
 const observer = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){ 
@@ -310,7 +310,7 @@ const observer = new IntersectionObserver(entries=>{
     }
   })
 },{threshold:.12});
-  
+
 /* ===== ВХОД ПО КОДУ ===== */
 (function(){
   const ok = localStorage.getItem('krik_gate_ok') === '1';
@@ -322,11 +322,13 @@ const observer = new IntersectionObserver(entries=>{
   function pass(){
     gate.style.display='none';
     localStorage.setItem('krik_gate_ok','1');
-    // старт плавного появления первого экрана
-    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+    // сразу переброс на финальную страницу
+    location.href = 'final.html';
   }
 
-  if(ok){ pass(); } else {
+  if(ok){ 
+    pass(); 
+  } else {
     gate.style.display='grid';
     btn.addEventListener('click', check);
     input.addEventListener('keydown', e=>{ if(e.key==='Enter') check(); });
@@ -335,71 +337,46 @@ const observer = new IntersectionObserver(entries=>{
   function check(){
     const v = (input.value||'').trim();
     if(v === '28082003'){
-      msg.textContent = 'Добро пожаловать.';
+      msg.textContent = '…верно.';
+      msg.style.color = '#8cf59c';
       pass();
     } else {
-      msg.textContent = 'Неверно. Попробуй ещё.';
+      msg.textContent = 'Не та тварь. Присмотрись внимательнее.';
       msg.style.color = '#ffb4b4';
     }
   }
 })();
 
 /* ===== ПОСТЕПЕННОЕ ПОТЕМНЕНИЕ ПРИ СКРОЛЛЕ ===== */
-(function(){
-  const d = document.getElementById('darken');
-  function upd(){
-    const h = document.documentElement.scrollHeight - innerHeight;
-    const p = h>0 ? Math.min(1, scrollY / h) : 0;
-    // от светлого к темнее к низу
-    document.documentElement.style.setProperty('--dark', (0.8*p).toFixed(3));
-  }
-  addEventListener('scroll', upd, {passive:true});
-  addEventListener('resize', upd);
-  upd();
-})();
+let dark=0, last=0;
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  if(y>last){ dark=Math.min(8,dark+0.02); }
+  else{ dark=Math.max(0,dark-0.02); }
+  document.documentElement.style.setProperty('--dark',dark);
+  last=y;
+});
 
-
-/* Если прошли через ворота – запустить сразу, иначе будет запущено после pass() */
+/* Если прошли через ворота – запустить сразу */
 if(localStorage.getItem('krik_gate_ok')==='1'){
   document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 }
 
-/* ===== ГЛИТЧ АКТИВАЦИЯ в финальном блоке ===== */
-(function(){
-  const final = document.getElementById('final');
-  const io = new IntersectionObserver(e=>{
-    if(e[0].isIntersecting){ document.body.classList.add('glitch-active'); }
-    else{ document.body.classList.remove('glitch-active'); }
-  },{threshold:.3});
-  io.observe(final);
-})();
+/* ===== ГЛИТЧ АКТИВАЦИЯ ПО КНОПКЕ ===== */
+document.querySelectorAll('[data-glitch]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.body.classList.add('glitching');
+    setTimeout(()=>document.body.classList.remove('glitching'),1000);
+  });
+});
 
-/* ===== ЗАГАДКА: «УЛИТКА» → РЕДИРЕКТ НА final.html ===== */
-(function(){
-  const input = document.getElementById('snailInput');
-  const btn = document.getElementById('snailBtn');
-  const msg = document.getElementById('snailMsg');
-
-  function goodAnswer(v){
-    const cleaned = (v||'').toLowerCase().trim().replaceAll(' ','');
-    return cleaned === 'улитка';
-  }
-
-  function check(){
-    const v = (input.value||'');
-    if(goodAnswer(v)){
-      msg.textContent = '…верно.';
-      msg.style.color = '#8cf59c';
-      // без показа слов — сразу уходим на финальную страницу
-      location.href = 'final.html';
-    } else {
-      msg.textContent = 'Не та тварь. Присмотрись внимательнее.';
-      msg.style.color = '#ffb4b4';
-    }
-  }
-  btn.addEventListener('click', check);
-  input.addEventListener('keydown', e=>{ if(e.key==='Enter') check(); });
-})();
+/* ===== ЗАГАДКА: «УЛИТКА» ===== */
+const snail=document.getElementById('snail');
+snail.addEventListener('click',()=>{
+  snail.classList.add('found');
+  localStorage.setItem('snail','1');
+});
+if(localStorage.getItem('snail')==='1'){ snail.classList.add('found'); }
 </script>
 </body>
 </html>
