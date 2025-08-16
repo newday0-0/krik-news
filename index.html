@@ -21,9 +21,16 @@
     overflow-x:hidden;
   }
 
-  /* Плавный вход всего контента */
+  /* Плавный вход всего контента (добавил поэлементное проявление) */
   .reveal {opacity:0; transform: translateY(10px); filter: blur(2px); transition: opacity .8s ease, transform .8s ease, filter .8s ease;}
   .reveal.show {opacity:1; transform:none; filter:none;}
+  .reveal > *{opacity:0; transform: translateY(8px); filter: blur(1.5px); transition: opacity .6s ease, transform .6s ease, filter .6s ease;}
+  .reveal.show > *{opacity:1; transform:none; filter:none;}
+  .reveal.show > *:nth-child(1){transition-delay:.06s}
+  .reveal.show > *:nth-child(2){transition-delay:.12s}
+  .reveal.show > *:nth-child(3){transition-delay:.18s}
+  .reveal.show > *:nth-child(4){transition-delay:.24s}
+  .reveal.show > *:nth-child(5){transition-delay:.30s}
 
   /* Градиентное потемнение с прокруткой */
   .darken{
@@ -93,7 +100,7 @@
   }
   .panel h2{margin:0 0 6px; color:#fff}
   .panel p{margin:0 0 14px; color:#ddd}
-  .panel input{width:100%; padding:12px 14px; font-size:18px; border-radius:8px; border:1px solid #555; background:#0f0f12; color:#fff}
+  .panel input{width:100%; max-width:100%; box-sizing:border-box; padding:12px 14px; font-size:18px; border-radius:8px; border:1px solid #555; background:#0f0f12; color:#fff}
   .panel button{
     margin-top:12px; padding:10px 14px; font-size:16px; border:0; border-radius:8px;
     background:#e12626; color:#fff; cursor:pointer
@@ -113,10 +120,28 @@
   .mast small{display:block; font-size:12px; letter-spacing:.08em}
   .mast strong{font-size:14px}
 
-  /* Мобильные мелочи */
+  /* Тёмная подложка для финального блока (без изменения текста) */
+  #final{
+    position:relative;
+    background:linear-gradient(180deg, rgba(12,12,16,.82), rgba(0,0,0,.94));
+    color:#f1f1f1;
+    border-radius:10px;
+    padding:16px;
+  }
+
+  /* Мобильные мелочи + адаптация фонового узора и модалки */
   @media (max-width:640px){
     h1{font-size:34px}
     h2{font-size:22px}
+    .page{
+      /* узор не «перезумлен» на телефонах */
+      background-attachment:scroll;
+      background-repeat:repeat;
+      background-size: 480px auto;
+      background-position: top center;
+    }
+    .panel{width:min(560px,94vw); padding:18px}
+    .panel input{font-size:16px}
   }
 </style>
 </head>
@@ -254,7 +279,7 @@
         <div id="snailMsg" class="hint"></div>
       </div>
 
-      <!-- Слова после правильного ответа -->
+      <!-- Слова после правильного ответа (оставляю в DOM, но на этой странице не показываем) -->
       <div id="snailWords" class="snail-words" style="margin-top:14px; display:none">
         <span>Ладно…</span><span>Ты</span><span>узнал.</span><span>Похоже,</span><span>теперь</span><span>ты</span><span>готов.</span>
         <span>Но</span><span>не</span><span>говори</span><span>ей,</span><span>что</span><span>я</span><span>тебе</span><span>это</span><span>сказал.</span>
@@ -330,7 +355,6 @@ if(localStorage.getItem('krik_gate_ok')==='1'){
 /* ===== ГЛИТЧ АКТИВАЦИЯ в финальном блоке ===== */
 (function(){
   const final = document.getElementById('final');
-  const gz = document.getElementById('glitchZone');
   const io = new IntersectionObserver(e=>{
     if(e[0].isIntersecting){ document.body.classList.add('glitch-active'); }
     else{ document.body.classList.remove('glitch-active'); }
@@ -338,30 +362,24 @@ if(localStorage.getItem('krik_gate_ok')==='1'){
   io.observe(final);
 })();
 
-/* ===== ЗАГАДКА: «УЛИТКА» ===== */
+/* ===== ЗАГАДКА: «УЛИТКА» → РЕДИРЕКТ НА final.html ===== */
 (function(){
   const input = document.getElementById('snailInput');
   const btn = document.getElementById('snailBtn');
   const msg = document.getElementById('snailMsg');
-  const words = document.getElementById('snailWords');
-  const spans = Array.from(words.querySelectorAll('span'));
-  const next = document.getElementById('nextLink');
 
-  function okSequence(){
-    words.style.display='flex';
-    spans.forEach((s,i)=>setTimeout(()=>{
-      s.style.opacity=1; s.style.transform='none';
-    }, 260*i));
-    setTimeout(()=>{ next.style.display='block'; }, 260*spans.length + 400);
+  function goodAnswer(v){
+    const cleaned = (v||'').toLowerCase().trim().replaceAll(' ','');
+    return cleaned === 'улитка';
   }
 
   function check(){
-    const v = (input.value||'').trim().toLowerCase();
-    const good = ['улитка','улиточка','snail','улитки','улитка🐌','🐌'];
-    if(good.includes(v) || v.replaceAll(' ','')==='улитка'){
+    const v = (input.value||'');
+    if(goodAnswer(v)){
       msg.textContent = '…верно.';
       msg.style.color = '#8cf59c';
-      okSequence();
+      // без показа слов — сразу уходим на финальную страницу
+      location.href = 'final.html';
     } else {
       msg.textContent = 'Не та тварь. Присмотрись внимательнее.';
       msg.style.color = '#ffb4b4';
