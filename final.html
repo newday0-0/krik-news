@@ -1,66 +1,64 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Финал</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Кричащая правда — финал</title>
 <style>
-  body {
-    margin: 0;
-    background: black;
-    color: white;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    min-height: 100vh;
-    text-align: center;
-    padding: 20px;
+  :root{
+    --bg:#0b0b10;
+    --fg:#f2f2f2;
+  }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family: ui-serif, Georgia, "Times New Roman", serif;line-height:1.6}
+  .wrap{min-height:100svh; display:grid; place-items:center; padding:24px}
+  .panel{
+    width:min(860px,94vw);
+    background:linear-gradient(180deg, rgba(18,18,24,.92), rgba(0,0,0,.96));
+    border:1px solid #222; border-radius:12px; padding:24px 20px;
+    box-shadow:0 20px 60px #000c, inset 0 0 60px #fff1;
+  }
+  h1{margin:0 0 12px; font-size:26px; text-align:center}
+  .snail-words{display:flex; flex-wrap:wrap; gap:.45em; font-size:22px; justify-content:center}
+  .snail-words span{opacity:0; transform:translateY(6px); transition:opacity .5s ease, transform .5s ease}
+  .actions{margin-top:18px; text-align:center}
+  .btn{
+    display:inline-block; padding:10px 16px; border-radius:10px; border:1px solid #333;
+    background:#e12626; color:#fff; text-decoration:none; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
   }
 
-  p {
-    opacity: 0;
-    transition: opacity 2s ease;
-    margin: 20px 0;
-    max-width: 700px;
-  }
+  /* лёгкое затемнение к низу страницы, чтобы чувство «проваливания» сохранилось */
+  .shade{pointer-events:none; position:fixed; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,.5) 85%, rgba(0,0,0,.85) 100%); mix-blend-mode:multiply}
 
-  .visible {
-    opacity: 1 !important;
-  }
-
-  .btn {
-    display: none;
-    margin-top: 30px;
-    padding: 10px 20px;
-    background: white;
-    color: black;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    border-radius: 5px;
+  @media (max-width:640px){
+    h1{font-size:22px}
+    .snail-words{font-size:20px}
   }
 </style>
 </head>
 <body>
-
-<p>Данила... Это был не просто выпуск.</p>
-<p>Ты должен был услышать всё.</p>
-<p>И теперь — тебе решать, что будет дальше.</p>
-
-<button class="btn" onclick="location.href='next.html'">Продолжить</button>
+<div class="shade"></div>
+<div class="wrap">
+  <div class="panel">
+    <h1>…</h1>
+    <div id="snailWords" class="snail-words">
+      <span>Ладно…</span><span>Ты</span><span>узнал.</span><span>Похоже,</span><span>теперь</span><span>ты</span><span>готов.</span>
+      <span>Но</span><span>не</span><span>говори</span><span>ей,</span><span>что</span><span>я</span><span>тебе</span><span>это</span><span>сказал.</span>
+    </div>
+    <div class="actions" id="goWrap" style="display:none">
+      <a class="btn" href="#">Продолжить →</a>
+    </div>
+  </div>
+</div>
 
 <script>
-  const paragraphs = document.querySelectorAll("p");
-  const button = document.querySelector(".btn");
-
-  paragraphs.forEach((p, i) => {
-    setTimeout(() => { p.classList.add("visible"); }, i * 3000);
-  });
-
-  setTimeout(() => { button.style.display = "inline-block"; }, paragraphs.length * 3000 + 1000);
+/* Появление слов по одному, затем кнопка */
+(function(){
+  const words = document.querySelectorAll('#snailWords span');
+  words.forEach((s,i)=>setTimeout(()=>{
+    s.style.opacity=1; s.style.transform='none';
+  }, 260*i));
+  setTimeout(()=>{ document.getElementById('goWrap').style.display='block'; }, 260*words.length + 400);
+})();
 </script>
-
 </body>
 </html>
