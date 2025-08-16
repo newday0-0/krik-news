@@ -313,7 +313,6 @@ const observer = new IntersectionObserver(entries=>{
 
 /* ===== ВХОД ПО КОДУ ===== */
 (function(){
-  const ok = localStorage.getItem('krik_gate_ok') === '1';
   const gate = document.getElementById('gate');
   const input = document.getElementById('gateInput');
   const btn = document.getElementById('gateBtn');
@@ -322,16 +321,18 @@ const observer = new IntersectionObserver(entries=>{
   function pass(){
     gate.style.display='none';
     localStorage.setItem('krik_gate_ok','1');
-    // если мы не на final.html → переброс
     if(!location.pathname.endsWith('final.html')){
-      setTimeout(()=>{ 
-        location.href = 'final.html'; 
-      },1500); // задержка 1.5 секунды
+      setTimeout(()=>{ location.href='final.html'; },1500);
     }
   }
 
-  if(ok){ 
-    pass(); 
+  const ok = localStorage.getItem('krik_gate_ok') === '1';
+
+  // Если мы на final.html, не перебрасываем и не показываем оверлей
+  if(location.pathname.endsWith('final.html')) return;
+
+  if(ok){
+    gate.style.display='none';
   } else {
     gate.style.display='grid';
     btn.addEventListener('click', check);
