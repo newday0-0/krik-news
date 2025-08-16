@@ -319,24 +319,22 @@ const observer = new IntersectionObserver(entries=>{
   const msg = document.getElementById('gateMsg');
 
   function pass(){
-    gate.style.display='none';
+    gate.style.display = 'none';
     localStorage.setItem('krik_gate_ok','1');
-    if(!location.pathname.endsWith('final.html')){
-      setTimeout(()=>{ location.href='final.html'; },1500);
-    }
+    // Запускаем анимацию .reveal для контента
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   }
 
   const ok = localStorage.getItem('krik_gate_ok') === '1';
 
-  // Если мы на final.html, не перебрасываем и не показываем оверлей
-  if(location.pathname.endsWith('final.html')) return;
-
+  // Если уже вводили код ранее
   if(ok){
     gate.style.display='none';
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   } else {
     gate.style.display='grid';
     btn.addEventListener('click', check);
-    input.addEventListener('keydown', e=>{ if(e.key==='Enter') check(); });
+    input.addEventListener('keydown', e => { if(e.key==='Enter') check(); });
   }
 
   function check(){
@@ -362,11 +360,6 @@ window.addEventListener('scroll',()=>{
   last=y;
 });
 
-/* Если прошли через ворота – запустить сразу */
-if(localStorage.getItem('krik_gate_ok')==='1'){
-  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-}
-
 /* ===== ГЛИТЧ АКТИВАЦИЯ ПО КНОПКЕ ===== */
 document.querySelectorAll('[data-glitch]').forEach(btn=>{
   btn.addEventListener('click',()=>{
@@ -377,11 +370,11 @@ document.querySelectorAll('[data-glitch]').forEach(btn=>{
 
 /* ===== ЗАГАДКА: «УЛИТКА» ===== */
 const snail=document.getElementById('snail');
-snail.addEventListener('click',()=>{
-  snail.classList.add('found');
-  localStorage.setItem('snail','1');
-});
-if(localStorage.getItem('snail')==='1'){ snail.classList.add('found'); }
+if(snail){
+  snail.addEventListener('click',()=>{
+    snail.classList.add('found');
+    localStorage.setItem('snail','1');
+  });
+  if(localStorage.getItem('snail')==='1'){ snail.classList.add('found'); }
+}
 </script>
-</body>
-</html>
