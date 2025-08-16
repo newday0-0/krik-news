@@ -324,7 +324,9 @@ const observer = new IntersectionObserver(entries=>{
     localStorage.setItem('krik_gate_ok','1');
     // если мы не на final.html → переброс
     if(!location.pathname.endsWith('final.html')){
-      location.href = 'final.html';
+      setTimeout(()=>{ 
+        location.href = 'final.html'; 
+      },1500); // задержка 1.5 секунды
     }
   }
 
