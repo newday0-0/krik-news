@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Забытое место</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    background-size: cover;
+    color: #ddd;
+    font-family: "Georgia", serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  #container {
+    max-width: 800px;
+    padding: 20px;
+    text-align: center;
+  }
+  .hidden { display: none; }
+  .line {
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  .flicker {
+    animation: flicker 2s infinite;
+  }
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+      text-shadow: 0 0 5px #aaa, 0 0 10px #999, 0 0 20px #777;
+    }
+    20%, 24%, 55% {
+      text-shadow: none;
+    }
+  }
+  .red { color: #a33; font-weight: bold; }
+  button {
+    background: #222;
+    border: 1px solid #555;
+    color: #ddd;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  button:hover { background: #333; }
+  #blackout {
+    position: fixed;
+    top:0; left:0; width:100%; height:100%;
+    background: #000;
+    z-index: 10;
+    display: none;
+  }
+  /* шум для blackout */
+  #blackout::after {
+    content: "";
+    position: absolute;
+    width:100%; height:100%;
+    background: url("https://i.imgur.com/o5zQ9mH.png"); /* шум */
+    opacity: 0.2;
+  }
+  .poem-line {
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+    margin: 10px 0;
+  }
+  .highlight {
+    font-weight: bold;
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+<div id="container"></div>
+<div id="blackout"></div>
+
+<audio autoplay loop>
+  <source src="https://cdn.pixabay.com/download/audio/2023/04/03/audio_1a3e6d5119.mp3?filename=creepy-whispers-143194.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const container = document.getElementById('container');
+const blackout = document.getElementById('blackout');
+
+const block1 = [
+  "Ты…",
+  "Ты пришёл…",
+  "Но зачем?…",
+  "Тебе оно надо?…",
+  "Ты думаешь, что доберёшься до истины…",
+  "Это не так…",
+  "Ложь станет твоей тенью.",
+  "Ты ошибаешься.",
+  "Тебе не спасти их.",
+  "Ты не всевластен.",
+  "Нельзя всё решить одним желанием.",
+  "Каждый будет страдать.",
+  "Миру не суждено настать.",
+  "Как бы ты не старался.",
+  "Как бы не лез из кожи вон.",
+  "Как бы не была сильна твоя воля.",
+  "Всё не имеет смысла.",
+  "<span class='red'>[𐊴𐊠𐊨𐊢]</span> неизбежен.",
+  "Самое время сдаться."
+];
+
+const block2 = [
+  "Ты не понял?",
+  "Ты ничто предо мной.",
+  "Хватит играть в рыцаря.",
+  "Чудес не бывает"
+];
+
+const block3 = [
+  "Хорошо…",
+  "Пути назад нет"
+];
+
+const poem = [
+  "<span class='highlight'>@</span>тень замка скользит меж строк забытых хроник,",
+  "<span class='highlight'>g</span>лубь озера - бездна зеркал и порог,",
+  "<span class='highlight'>a</span> листья садов шепчут тайны забытых ветров,",
+  "<span class='highlight'>n</span>ад пеплом костра танцует дым непростых снов,",
+  "<span class='highlight'>b</span>рошенный сарай - порог миров и забвения,",
+  "<span class='highlight'>a</span> на ярмарке теней мерцают отблески забвения,",
+  "<span class='highlight'>r</span>азрезая ночи, страж ведёт к тайнам и снам,",
+  "<span class='highlight'>u</span>йти — раствориться в эхо безмолвных молитв,",
+  "<span class='highlight'>0</span>траженье в мраке — знак пути сквозь забвенье,",
+  "<span class='highlight'>0</span>гненный свет звезды — зов, что ведёт сквозь тьму,",
+  "<span class='highlight'>0</span>тпечаток души — ключ к двери безмятежной,"
+];
+
+function showLines(lines, callback) {
+  let i = 0;
+  function next() {
+    if (i < lines.length) {
+      const p = document.createElement("p");
+      p.className = "line flicker";
+      p.style.animationDelay = (i * 2) + "s";
+      p.innerHTML = lines[i];
+      container.appendChild(p);
+      i++;
+      setTimeout(next, 2000);
+    } else {
+      const btn = document.createElement("button");
+      btn.textContent = "Продолжить";
+      btn.onclick = callback;
+      container.appendChild(btn);
+    }
+  }
+  next();
+}
+
+function startBlock2() {
+  container.innerHTML = "";
+  showLines(block2, startBlock3);
+}
+
+function startBlock3() {
+  container.innerHTML = "";
+  showLines(block3, startBlackout);
+}
+
+function startBlackout() {
+  container.innerHTML = "";
+  blackout.style.display = "block";
+  setTimeout(()=>{
+    blackout.style.display = "none";
+    startPoem();
+  }, 10000);
+}
+
+function startPoem() {
+  container.innerHTML = "";
+  let i = 0;
+  function nextLine() {
+    if (i < poem.length) {
+      const p = document.createElement("p");
+      p.className = "poem-line";
+      p.style.animationDelay = "0s";
+      p.innerHTML = poem[i];
+      container.appendChild(p);
+      i++;
+      setTimeout(nextLine, 2500);
+    }
+  }
+  nextLine();
+}
+
+// запуск
+showLines(block1, startBlock2);
+</script>
+</body>
+</html>
