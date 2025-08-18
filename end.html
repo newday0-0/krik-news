@@ -23,57 +23,31 @@
     padding: 20px;
     text-align: center;
   }
-  .line {
-    opacity: 0;
-    animation: fadeIn 2s forwards;
-  }
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
-  .flicker {
-    animation: flicker 2s infinite;
-  }
-  @keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-      text-shadow: 0 0 5px #aaa, 0 0 10px #999, 0 0 20px #777;
-    }
-    20%, 24%, 55% {
-      text-shadow: none;
-    }
-  }
-  .red { color: #a33; font-weight: bold; }
-  button {
-    background: #222;
-    border: 1px solid #555;
-    color: #ddd;
-    padding: 10px 20px;
-    margin-top: 20px;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  button:hover { background: #333; }
-  #blackout {
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    background: #000;
-    z-index: 10;
-    display: none;
-  }
-  #blackout::after {
-    content: "";
-    position: absolute;
-    width:100%; height:100%;
-    background: url("https://i.imgur.com/o5zQ9mH.png");
-    opacity: 0.2;
-  }
-  .poem-line {
+  .line, .poem-line {
     opacity: 0;
     animation: fadeIn 2s forwards;
     margin: 10px 0;
   }
-  .highlight {
-    font-weight: bold;
-    color: #fff;
+  @keyframes fadeIn { to { opacity: 1; } }
+  .flicker { animation: flicker 2s infinite; }
+  @keyframes flicker {
+    0%,19%,21%,23%,25%,54%,56%,100% { text-shadow:0 0 5px #aaa,0 0 10px #999,0 0 20px #777; }
+    20%,24%,55% { text-shadow:none; }
+  }
+  .red { color: #a33; font-weight: bold; }
+  .highlight { font-weight: bold; color: #fff; }
+  button {
+    background: #222; border:1px solid #555; color:#ddd;
+    padding:10px 20px; margin-top:20px; cursor:pointer; font-family:inherit;
+  }
+  button:hover { background:#333; }
+  #blackout {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background:#000; z-index:10; display:none;
+  }
+  #blackout::after {
+    content:""; position:absolute; width:100%; height:100%;
+    background:url("https://i.imgur.com/o5zQ9mH.png"); opacity:0.2;
   }
 </style>
 </head>
@@ -86,38 +60,17 @@ const container = document.getElementById('container');
 const blackout = document.getElementById('blackout');
 
 const block1 = [
-  "Ты…",
-  "Ты пришёл…",
-  "Но зачем?…",
-  "Тебе оно надо?…",
-  "Ты думаешь, что доберёшься до истины…",
-  "Это не так…",
-  "Ложь станет твоей тенью.",
-  "Ты ошибаешься.",
-  "Тебе не спасти их.",
-  "Ты не всевластен.",
-  "Нельзя всё решить одним желанием.",
-  "Каждый будет страдать.",
-  "Миру не суждено настать.",
-  "Как бы ты не старался.",
-  "Как бы не лез из кожи вон.",
-  "Как бы не была сильна твоя воля.",
-  "Всё не имеет смысла.",
-  "<span class='red'>[𐊴𐊠𐊨𐊢]</span> неизбежен.",
-  "Самое время сдаться."
+  "Ты…","Ты пришёл…","Но зачем?…","Тебе оно надо?…",
+  "Ты думаешь, что доберёшься до истины…","Это не так…",
+  "Ложь станет твоей тенью.","Ты ошибаешься.","Тебе не спасти их.",
+  "Ты не всевластен.","Нельзя всё решить одним желанием.","Каждый будет страдать.",
+  "Миру не суждено настать.","Как бы ты не старался.","Как бы не лез из кожи вон.",
+  "Как бы не была сильна твоя воля.","Всё не имеет смысла.",
+  "<span class='red'>[𐊴𐊠𐊨𐊢]</span> неизбежен.","Самое время сдаться."
 ];
 
-const block2 = [
-  "Ты не понял?",
-  "Ты ничто предо мной.",
-  "Хватит играть в рыцаря.",
-  "Чудес не бывает"
-];
-
-const block3 = [
-  "Хорошо…",
-  "Пути назад нет"
-];
+const block2 = ["Ты не понял?","Ты ничто предо мной.","Хватит играть в рыцаря.","Чудес не бывает"];
+const block3 = ["Хорошо…","Пути назад нет"];
 
 const poem = [
   "<span class='highlight'>@</span>тень замка скользит меж строк забытых хроник,",
@@ -134,65 +87,56 @@ const poem = [
 ];
 
 function showLines(lines, callback, delay=1000) {
-  let i = 0;
+  let i=0;
   function next() {
-    if (i < lines.length) {
-      const p = document.createElement("p");
-      p.className = "line flicker";
-      p.innerHTML = lines[i];
+    if(i<lines.length){
+      const p=document.createElement("p");
+      p.className="line flicker";
+      p.innerHTML=lines[i];
       container.appendChild(p);
       i++;
       setTimeout(next, delay);
-    } else if(callback) {
-      const btn = document.createElement("button");
-      btn.textContent = "Продолжить";
-      btn.onclick = callback;
+    } else if(callback){
+      const btn=document.createElement("button");
+      btn.textContent="Продолжить";
+      btn.onclick=callback;
       container.appendChild(btn);
     }
   }
   next();
 }
 
-function startBlock2() {
-  container.innerHTML = "";
-  showLines(block2, startBlock3);
-}
-
-function startBlock3() {
-  container.innerHTML = "";
-  showLines(block3, startBlackout);
-}
-
-function startBlackout() {
-  container.innerHTML = "";
-  blackout.style.display = "block";
+function startBlock2(){ container.innerHTML=""; showLines(block2,startBlock3,1000); }
+function startBlock3(){ container.innerHTML=""; showLines(block3,startBlackout,1000); }
+function startBlackout(){
+  container.innerHTML="";
+  blackout.style.display="block";
   setTimeout(()=>{
-    blackout.style.display = "none";
+    blackout.style.display="none";
     startPoem();
-  }, 10000);
+  },10000);
 }
-
-function startPoem() {
-  container.innerHTML = "";
-  let i = 0;
-  function nextLine() {
-    if (i < poem.length) {
-      const p = document.createElement("p");
-      p.className = "poem-line";
-      p.innerHTML = poem[i];
+function startPoem(){
+  container.innerHTML="";
+  let i=0;
+  function nextLine(){
+    if(i<poem.length){
+      const p=document.createElement("p");
+      p.className="poem-line";
+      p.innerHTML=poem[i];
       container.appendChild(p);
       i++;
-      setTimeout(nextLine, 1500);
+      setTimeout(nextLine,1500);
     }
   }
   nextLine();
 }
 
 // старт после паузы на "Loading…"
-setTimeout(() => {
-  container.innerHTML = "";
-  showLines(block1, startBlock2);
-}, 2000);
+setTimeout(()=>{
+  container.innerHTML="";
+  showLines(block1,startBlock2,1000);
+},2000);
 </script>
 </body>
 </html>
