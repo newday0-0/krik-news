@@ -10,13 +10,20 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
+  overflow: hidden;
   font-family: 'Cinzel', serif;
   display: flex;
   justify-content: center;
   align-items: center;
   background: radial-gradient(circle at center, #111 0%, #000 100%);
+  background-size: 200% 200%;
+  animation: bgMove 20s infinite alternate;
   color: #ddd;
-  overflow: hidden;
+}
+
+@keyframes bgMove {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 50% 50%; }
 }
 
 #container {
@@ -29,88 +36,97 @@ body {
   opacity: 0;
   margin: 12px 0;
   transform: translateY(-20px);
-  animation: fadeInUp 1.5s forwards;
+  animation: fadeInUp 2s forwards;
   text-shadow: 0 0 5px #aaa, 0 0 10px #999;
 }
 
-@keyframes fadeInUp { to { opacity:1; transform:translateY(0); } }
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
 
 .flicker {
   animation: flicker 2s infinite;
 }
+
 @keyframes flicker {
   0%,19%,21%,23%,25%,54%,56%,100% { text-shadow:0 0 5px #aaa,0 0 10px #999,0 0 20px #777; }
   20%,24%,55% { text-shadow:none; }
 }
 
-.red { color:#a33; font-weight:bold; text-shadow:0 0 8px #a33; }
-.highlight { font-weight:bold; color:#fff; text-shadow:0 0 6px #fff; }
+.red { color: #a33; font-weight: bold; text-shadow: 0 0 8px #a33; }
+.highlight { font-weight: bold; color: #fff; text-shadow: 0 0 6px #fff; }
 
 button {
-  background:#222; border:1px solid #555; color:#ddd;
-  padding:10px 20px; margin-top:20px; cursor:pointer; font-family:inherit;
+  background:#222;
+  border:1px solid #555;
+  color:#ddd;
+  padding:10px 20px;
+  margin-top:20px;
+  cursor:pointer;
+  font-family:inherit;
 }
-button:hover { background:#333; }
 
-#blackout {
-  position: fixed; top:0; left:0; width:100%; height:100%;
-  background:#000; z-index:10; display:none; opacity:0.95;
-}
-#blackout::after {
-  content:""; position:absolute; width:100%; height:100%;
-  background:url("https://i.imgur.com/o5zQ9mH.png"); opacity:0.2;
-}
+button:hover { background:#333; }
 </style>
 </head>
 <body>
 <div id="container">Loading…</div>
-<div id="blackout"></div>
 
 <script>
 const container = document.getElementById('container');
-const blackout = document.getElementById('blackout');
 
-const block1 = ["Ты…","Ты пришёл…","Но зачем?…","Тебе оно надо?…",
-"Ты думаешь, что доберёшься до истины…","Это не так…","Ложь станет твоей тенью.",
-"Ты ошибаешься.","Тебе не спасти их.","Ты не всевластен.",
-"Нельзя всё решить одним желанием.","Каждый будет страдать.","Миру не суждено настать.",
-"Как бы ты не старался.","Как бы не лез из кожи вон.","Как бы не была сильна твоя воля.",
-"Всё не имеет смысла.","<span class='red'>[𐊴𐊠𐊨𐊢]</span> неизбежен.","Самое время сдаться."];
-
-const block2 = ["Ты не понял?","Ты ничто предо мной.","Хватит играть в рыцаря.","Чудес не бывает"];
-const block3 = ["Хорошо…","Пути назад нет"];
-
-const poem = [
-"<span class='highlight'>@</span>тень замка скользит меж строк забытых хроник, где стражи молчат в снах за гранью часов.",
-"<span class='highlight'>g</span>лубь озера - бездна зеркал и порог, отражений плен, где играют слёзы снов.",
-"<span class='highlight'>a</span> листья садов шепчут тайны забытых ветров, корни плетут узоры меж светом и тьмой.",
-"<span class='highlight'>n</span>ад пеплом костра танцует дым непростых снов, огонь таит в себе ключ к дверям неземной.",
-"<span class='highlight'>b</span>рошенный сарай - порог миров и забвения, тени мостят тропы меж строк незримых судеб.",
-"<span class='highlight'>a</span> на ярмарке теней мерцают отблески забвения, где свечи надежды горят в тишине чудесной.",
-"<span class='highlight'>r</span>азрезая ночи, страж ведёт к тайнам и снам, он — хранитель зыбкой грани между былью и сном.",
-"<span class='highlight'>u</span>йти — раствориться в эхо безмолвных молитв, но лишь шагнувший поймёт шёпот вечных ветров.",
-"<span class='highlight'>0</span>траженье в мраке — знак пути сквозь забвенье,",
-"<span class='highlight'>0</span>гненный свет звезды — зов, что ведёт сквозь тьму,",
-"<span class='highlight'>0</span>тпечаток души — ключ к двери безмятежной, что скрыта в сердце бескрайней тишины."
+const block1 = [
+  "Ты…", "Ты пришёл…", "Но зачем?…", "Тебе оно надо?…", 
+  "Ты думаешь, что доберёшься до истины…", "Это не так…", 
+  "Ложь станет твоей тенью.", "Ты ошибаешься.", 
+  "Тебе не спасти их.", "Ты не всевластен.", 
+  "Нельзя всё решить одним желанием.", "Каждый будет страдать.", 
+  "Миру не суждено настать.", "Как бы ты не старался.", 
+  "Как бы не лез из кожи вон.", "Как бы не была сильна твоя воля.", 
+  "Всё не имеет смысла.", "<span class='red'>[𐊴𐊠𐊨𐊢]</span> неизбежен.", 
+  "Самое время сдаться."
 ];
 
-// функция показа блока с кнопкой "Дальше"
-function showBlock(lines, callback){
-  container.innerHTML="";
-  let i=0;
+const block2 = [
+  "Ты не понял?", "Ты ничто предо мной.", 
+  "Хватит играть в рыцаря.", "Чудес не бывает"
+];
 
-  function nextLine(){
+const block3 = [
+  "Хорошо…", "Пути назад нет"
+];
+
+const poem = [
+  "<span class='highlight'>@</span>тень замка скользит меж строк забытых хроник, где стражи молчат в снах за гранью часов.",
+  "<span class='highlight'>g</span>лубь озера - бездна зеркал и порог, отражений плен, где играют слёзы снов.",
+  "<span class='highlight'>a</span> листья садов шепчут тайны забытых ветров, корни плетут узоры меж светом и тьмой.",
+  "<span class='highlight'>n</span>ад пеплом костра танцует дым непростых снов, огонь таит в себе ключ к дверям неземной.",
+  "<span class='highlight'>b</span>рошенный сарай - порог миров и забвения, тени мостят тропы меж строк незримых судеб.",
+  "<span class='highlight'>a</span> на ярмарке теней мерцают отблески забвения, где свечи надежды горят в тишине чудесной.",
+  "<span class='highlight'>r</span>азрезая ночи, страж ведёт к тайнам и снам, он — хранитель зыбкой грани между былью и сном.",
+  "<span class='highlight'>u</span>йти — раствориться в эхо безмолвных молитв, но лишь шагнувший поймёт шёпот вечных ветров.",
+  "<span class='highlight'>0</span>траженье в мраке — знак пути сквозь забвенье,",
+  "<span class='highlight'>0</span>гненный свет звезды — зов, что ведёт сквозь тьму,",
+  "<span class='highlight'>0</span>тпечаток души — ключ к двери безмятежной, что скрыта в сердце бескрайней тишины."
+];
+
+// Функция отображения блока с кнопкой "Дальше"
+function showBlock(lines, callback, delay=1200){
+  container.innerHTML = "";
+  let i = 0;
+
+  function nextLine() {
     if(i<lines.length){
-      const p=document.createElement("p");
-      p.className="line flicker";
-      p.innerHTML=lines[i];
+      const p = document.createElement("p");
+      p.className = "line flicker";
+      p.innerHTML = lines[i];
       container.appendChild(p);
       i++;
-      setTimeout(nextLine,1500);
+      setTimeout(nextLine, delay);
     } else {
-      const btn=document.createElement("button");
-      btn.textContent="Дальше";
-      btn.onclick=callback;
+      const btn = document.createElement("button");
+      btn.textContent = "Дальше";
+      btn.onclick = callback;
       container.appendChild(btn);
     }
   }
@@ -118,48 +134,33 @@ function showBlock(lines, callback){
   nextLine();
 }
 
-// Blackout перед стихом
-function startBlackout(callback){
-  container.innerHTML="";
-  blackout.style.display="block";
-  setTimeout(()=>{
-    blackout.style.display="none";
-    callback();
-  },3000);
-}
-
-// Появление стиха
+// Финальный стих
 function startPoem(){
-  container.innerHTML="";
-  let i=0;
+  container.innerHTML = "";
+  let i = 0;
 
   function nextPoem(){
     if(i<poem.length){
-      const p=document.createElement("p");
-      p.className="poem-line";
-      p.innerHTML=poem[i];
+      const p = document.createElement("p");
+      p.className = "poem-line";
+      p.innerHTML = poem[i];
       container.appendChild(p);
       i++;
-      setTimeout(nextPoem,1800);
+      setTimeout(nextPoem, 1500);
     }
   }
 
   nextPoem();
 }
 
-// Старт последовательности после загрузки
-document.addEventListener("DOMContentLoaded", ()=>{
-  // небольшая пауза на Loading…
-  setTimeout(()=>{
-    showBlock(block1, ()=>{
-      showBlock(block2, ()=>{
-        showBlock(block3, ()=>{
-          startBlackout(startPoem);
-        });
-      });
+// Запуск последовательности с паузой на Loading…
+setTimeout(()=>{
+  showBlock(block1, ()=>{
+    showBlock(block2, ()=>{
+      showBlock(block3, startPoem);
     });
-  },1000);
-});
+  });
+}, 1500);
 </script>
 </body>
 </html>
