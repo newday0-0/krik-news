@@ -10,20 +10,13 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  overflow: hidden;
   font-family: 'Cinzel', serif;
   display: flex;
   justify-content: center;
   align-items: center;
   background: radial-gradient(circle at center, #111 0%, #000 100%);
-  background-size: 200% 200%;
-  animation: bgMove 20s infinite alternate;
   color: #ddd;
-}
-
-@keyframes bgMove {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 50% 50%; }
+  overflow: hidden;
 }
 
 #container {
@@ -36,21 +29,11 @@ body {
   opacity: 0;
   margin: 12px 0;
   transform: translateY(-20px);
-  animation: fadeInUp 2s forwards;
-  text-shadow: 0 0 5px #aaa, 0 0 10px #999;
+  animation: fadeInUp 1.5s forwards;
 }
 
 @keyframes fadeInUp {
   to { opacity: 1; transform: translateY(0); }
-}
-
-.flicker {
-  animation: flicker 2s infinite;
-}
-
-@keyframes flicker {
-  0%,19%,21%,23%,25%,54%,56%,100% { text-shadow:0 0 5px #aaa,0 0 10px #999,0 0 20px #777; }
-  20%,24%,55% { text-shadow:none; }
 }
 
 .red { color: #a33; font-weight: bold; text-shadow: 0 0 8px #a33; }
@@ -67,6 +50,7 @@ button {
 }
 
 button:hover { background:#333; }
+
 </style>
 </head>
 <body>
@@ -110,7 +94,6 @@ const poem = [
   "<span class='highlight'>0</span>тпечаток души — ключ к двери безмятежной, что скрыта в сердце бескрайней тишины."
 ];
 
-// Функция отображения блока с кнопкой "Дальше"
 function showBlock(lines, callback, delay=1200){
   container.innerHTML = "";
   let i = 0;
@@ -118,12 +101,12 @@ function showBlock(lines, callback, delay=1200){
   function nextLine() {
     if(i<lines.length){
       const p = document.createElement("p");
-      p.className = "line flicker";
+      p.className = "line";
       p.innerHTML = lines[i];
       container.appendChild(p);
       i++;
       setTimeout(nextLine, delay);
-    } else {
+    } else if(callback){
       const btn = document.createElement("button");
       btn.textContent = "Дальше";
       btn.onclick = callback;
@@ -134,9 +117,8 @@ function showBlock(lines, callback, delay=1200){
   nextLine();
 }
 
-// Финальный стих
 function startPoem(){
-  container.innerHTML = "";
+  container.innerHTML="";
   let i = 0;
 
   function nextPoem(){
@@ -153,14 +135,14 @@ function startPoem(){
   nextPoem();
 }
 
-// Запуск последовательности с паузой на Loading…
-setTimeout(()=>{
+// Старт без лишней вложенности
+document.addEventListener("DOMContentLoaded", ()=>{
   showBlock(block1, ()=>{
     showBlock(block2, ()=>{
       showBlock(block3, startPoem);
     });
   });
-}, 1500);
+});
 </script>
 </body>
 </html>
