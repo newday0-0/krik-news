@@ -5,51 +5,24 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Забытое место</title>
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    background: radial-gradient(circle at center, #111 0%, #000 100%);
-    background-size: cover;
-    color: #ddd;
-    font-family: "Georgia", serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-  #container {
-    max-width: 800px;
-    padding: 20px;
-    text-align: center;
-  }
-  .line, .poem-line {
-    opacity: 0;
-    animation: fadeIn 2s forwards;
-    margin: 10px 0;
-  }
-  @keyframes fadeIn { to { opacity: 1; } }
-  .flicker { animation: flicker 2s infinite; }
-  @keyframes flicker {
-    0%,19%,21%,23%,25%,54%,56%,100% { text-shadow:0 0 5px #aaa,0 0 10px #999,0 0 20px #777; }
-    20%,24%,55% { text-shadow:none; }
-  }
-  .red { color: #a33; font-weight: bold; }
-  .highlight { font-weight: bold; color: #fff; }
-  #blackout {
-    position: fixed; top:0; left:0; width:100%; height:100%;
-    background:#000; z-index:10; display:none;
-  }
-  #blackout::after {
-    content:""; position:absolute; width:100%; height:100%;
-    background:url("https://i.imgur.com/o5zQ9mH.png"); opacity:0.2;
-  }
+body {
+  margin:0; padding:0; height:100vh;
+  background: radial-gradient(circle at center, #111 0%, #000 100%);
+  color:#ddd; font-family: "Georgia", serif;
+  display:flex; justify-content:center; align-items:center;
+  overflow:hidden;
+}
+#container { max-width:800px; padding:20px; text-align:center; visibility:hidden; }
+.line, .poem-line { opacity:0; margin:10px 0; }
+.red { color:#a33; font-weight:bold; }
+.highlight { font-weight:bold; color:#fff; }
+#blackout { position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:10; display:none; }
+#blackout::after { content:""; position:absolute; width:100%; height:100%; background:url("https://i.imgur.com/o5zQ9mH.png"); opacity:0.2; }
 </style>
 </head>
 <body>
 <div id="container">Loading…</div>
 <div id="blackout"></div>
-
 <script>
 const container = document.getElementById('container');
 const blackout = document.getElementById('blackout');
@@ -57,60 +30,39 @@ const blackout = document.getElementById('blackout');
 const block1 = ["Ты…","Ты пришёл…","Но зачем?…","Тебе оно надо?…","Ты думаешь, что доберёшься до истины…","Это не так…","Ложь станет твоей тенью.","Ты ошибаешься.","Тебе не спасти их.","Ты не всевластен.","Нельзя всё решить одним желанием.","Каждый будет страдать.","Миру не суждено настать.","Как бы ты не старался.","Как бы не лез из кожи вон.","Как бы не была сильна твоя воля.","Всё не имеет смысла.","<span class='red'>[𐊴𐊠𐊨𐊢]</span> неизбежен.","Самое время сдаться."];
 const block2 = ["Ты не понял?","Ты ничто предо мной.","Хватит играть в рыцаря.","Чудес не бывает"];
 const block3 = ["Хорошо…","Пути назад нет"];
-const poem = ["<span class='highlight'>@</span>тень замка скользит меж строк забытых хроник,","<span class='highlight'>g</span>лубь озера - бездна зеркал и порог,","<span class='highlight'>a</span> листья садов шепчут тайны забытых ветров,","<span class='highlight'>n</span>ад пеплом костра танцует дым непростых снов,","<span class='highlight'>b</span>рошенный сарай - порог миров и забвения,","<span class='highlight'>a</span> на ярмарке теней мерцают отблески забвения","<span class='highlight'>r</span>азрезая ночи, страж ведёт к тайнам и снам","<span class='highlight'>u</span>йти — раствориться в эхо безмолвных молитв","<span class='highlight'>0</span>траженье в мраке — знак пути сквозь забвенье","<span class='highlight'>0</span>гненный свет звезды — зов, что ведёт сквозь тьму","<span class='highlight'>0</span>тпечаток души — ключ к двери безмятежной,"];
+const poem = ["<span class='highlight'>@</span>тень замка скользит меж строк забытых хроник,","<span class='highlight'>g</span>лубь озера - бездна зеркал и порог,","<span class='highlight'>a</span> листья садов шепчут тайны забытых ветров","<span class='highlight'>n</span>ад пеплом костра танцует дым непростых снов","<span class='highlight'>b</span>рошенный сарай - порог миров и забвения","<span class='highlight'>a</span> на ярмарке теней мерцают отблески забвения","<span class='highlight'>r</span>азрезая ночи, страж ведёт к тайнам и снам","<span class='highlight'>u</span>йти — раствориться в эхо безмолвных молитв","<span class='highlight'>0</span>траженье в мраке — знак пути сквозь забвенье","<span class='highlight'>0</span>гненный свет звезды — зов, что ведёт сквозь тьму","<span class='highlight'>0</span>тпечаток души — ключ к двери безмятежной,"];
 
-function showBlock(lines, delay, callback){
+function appendLines(lines, delay, callback){
+  container.style.visibility="visible";
   let i=0;
-  function nextLine(){
+  function next(){
     if(i<lines.length){
       const p=document.createElement("p");
-      p.className="line flicker";
+      p.className="line";
       p.innerHTML=lines[i];
       container.appendChild(p);
+      p.style.opacity=1; // сразу делаем видимым
       i++;
-      setTimeout(nextLine, delay);
-    }else if(callback){
-      callback();
-    }
+      requestAnimationFrame(()=>setTimeout(next,delay));
+    }else if(callback){ callback(); }
   }
-  nextLine();
+  next();
 }
 
-function startBlackout(callback){
+function startBlackout(cb){
   container.innerHTML="";
   blackout.style.display="block";
-  setTimeout(()=>{
-    blackout.style.display="none";
-    if(callback) callback();
-  },10000);
+  setTimeout(()=>{ blackout.style.display="none"; if(cb) cb(); },10000);
 }
 
 function startPoem(){
   container.innerHTML="";
-  let i=0;
-  function nextPoem(){
-    if(i<poem.length){
-      const p=document.createElement("p");
-      p.className="poem-line";
-      p.innerHTML=poem[i];
-      container.appendChild(p);
-      i++;
-      setTimeout(nextPoem,1500);
-    }
-  }
-  nextPoem();
+  appendLines(poem,1500);
 }
 
-// запуск последовательности
 setTimeout(()=>{
   container.innerHTML="";
-  showBlock(block1,1000,()=>{
-    showBlock(block2,1000,()=>{
-      showBlock(block3,1000,()=>{
-        startBlackout(startPoem);
-      });
-    });
-  });
+  appendLines(block1,1000,()=>{ appendLines(block2,1000,()=>{ appendLines(block3,1000,()=>{ startBlackout(startPoem); }); }); });
 },2000);
 </script>
 </body>
