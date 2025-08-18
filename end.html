@@ -23,7 +23,6 @@
     padding: 20px;
     text-align: center;
   }
-  .hidden { display: none; }
   .line {
     opacity: 0;
     animation: fadeIn 2s forwards;
@@ -60,12 +59,11 @@
     z-index: 10;
     display: none;
   }
-  /* шум для blackout */
   #blackout::after {
     content: "";
     position: absolute;
     width:100%; height:100%;
-    background: url("https://i.imgur.com/o5zQ9mH.png"); /* шум */
+    background: url("https://i.imgur.com/o5zQ9mH.png");
     opacity: 0.2;
   }
   .poem-line {
@@ -82,10 +80,6 @@
 <body>
 <div id="container">Loading…</div>
 <div id="blackout"></div>
-
-<audio autoplay loop>
-  <source src="https://cdn.pixabay.com/download/audio/2023/04/03/audio_1a3e6d5119.mp3?filename=creepy-whispers-143194.mp3" type="audio/mpeg">
-</audio>
 
 <script>
 const container = document.getElementById('container');
@@ -139,7 +133,6 @@ const poem = [
   "<span class='highlight'>0</span>тпечаток души — ключ к двери безмятежной,"
 ];
 
-// универсальная функция показа строк
 function showLines(lines, callback, delay=1000) {
   let i = 0;
   function next() {
@@ -150,7 +143,7 @@ function showLines(lines, callback, delay=1000) {
       container.appendChild(p);
       i++;
       setTimeout(next, delay);
-    } else {
+    } else if(callback) {
       const btn = document.createElement("button");
       btn.textContent = "Продолжить";
       btn.onclick = callback;
@@ -195,7 +188,7 @@ function startPoem() {
   nextLine();
 }
 
-// старт после короткой паузы на "Loading…"
+// старт после паузы на "Loading…"
 setTimeout(() => {
   container.innerHTML = "";
   showLines(block1, startBlock2);
