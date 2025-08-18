@@ -4,16 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Забытое место</title>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&display=swap" rel="stylesheet">
 <style>
 body {
   margin:0; padding:0; min-height:100vh;
   background: radial-gradient(circle at center, #111 0%, #000 100%);
-  color:#ddd; font-family:"Georgia", serif;
+  color:#ddd; font-family:'Gloock', serif;
   display:flex; justify-content:center; align-items:flex-start;
   overflow-y:auto; padding-top:50px;
 }
 #container { max-width:800px; padding:20px; text-align:center; }
 .line, .poem-line { opacity:0; margin:10px 0; transition: opacity 1s; }
+.flicker { animation: flicker 2s infinite; }
+@keyframes flicker {
+  0%,19%,21%,23%,25%,54%,56%,100% { text-shadow:0 0 5px #aaa,0 0 10px #999,0 0 20px #777; }
+  20%,24%,55% { text-shadow:none; }
+}
 .red { color:#a33; font-weight:bold; }
 .highlight { font-weight:bold; color:#fff; }
 #blackout {
@@ -57,37 +63,40 @@ const poem = [
 "<span class='highlight'>0</span>тпечаток души — ключ к двери безмятежной,","что скрыта в сердце бескрайней тишины."
 ];
 
-// Функция показа блока
-function showBlock(lines, delay, callback){
-  container.innerHTML = ""; // очищаем предыдущий блок
-  let i = 0;
-  function nextLine(){
-    if(i < lines.length){
-      const p = document.createElement("p");
-      p.className = "line";
-      p.innerHTML = lines[i];
-      container.appendChild(p);
-      setTimeout(()=>{ p.style.opacity = 1; }, 50);
-      i++;
-      setTimeout(nextLine, delay);
-    } else if(callback){
-      callback();
-    }
-  }
-  nextLine();
-}
-
-// Функция показа стиха
-function showPoem(lines, delay){
+// Функция показа блока с кнопкой
+function showBlockWithButton(lines, delay, callback){
   container.innerHTML = "";
   let i = 0;
   function nextLine(){
     if(i < lines.length){
       const p = document.createElement("p");
-      p.className = "poem-line";
+      p.className = "line flicker";
       p.innerHTML = lines[i];
       container.appendChild(p);
-      setTimeout(()=>{ p.style.opacity = 1; }, 50);
+      setTimeout(()=>{ p.style.opacity=1; },50);
+      i++;
+      setTimeout(nextLine, delay);
+    } else {
+      const btn = document.createElement("button");
+      btn.textContent = "Дальше";
+      btn.onclick = callback;
+      container.appendChild(btn);
+    }
+  }
+  nextLine();
+}
+
+// Показ стиха
+function showPoem(lines, delay){
+  container.innerHTML = "";
+  let i=0;
+  function nextLine(){
+    if(i<lines.length){
+      const p=document.createElement("p");
+      p.className = "poem-line flicker";
+      p.innerHTML = lines[i];
+      container.appendChild(p);
+      setTimeout(()=>{ p.style.opacity=1; },50);
       i++;
       setTimeout(nextLine, delay);
     }
@@ -95,17 +104,26 @@ function showPoem(lines, delay){
   nextLine();
 }
 
+// Blackout перед стихом
+function startBlackout(callback){
+  container.innerHTML="";
+  blackout.style.display="block";
+  setTimeout(()=>{
+    blackout.style.display="none";
+    if(callback) callback();
+  },2500);
+}
+
 // Запуск последовательности
 setTimeout(()=>{
-  showBlock(block1, 1800, ()=>{
-    showBlock(block2, 1800, ()=>{
-      showBlock(block3, 1800, ()=>{
-        showPoem(poem, 2200);
+  showBlockWithButton(block1,1800,()=>{
+    showBlockWithButton(block2,1800,()=>{
+      showBlockWithButton(block3,1800,()=>{
+        startBlackout(()=>{ showPoem(poem,2200); });
       });
     });
   });
-}, 2000);
-
+},2000);
 </script>
 </body>
 </html>
