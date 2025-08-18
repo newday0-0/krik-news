@@ -10,13 +10,13 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  overflow: hidden;
   font-family: 'Cinzel', serif;
   display: flex;
   justify-content: center;
   align-items: center;
   background: radial-gradient(circle at center, #111 0%, #000 100%);
   color: #ddd;
+  overflow: hidden;
 }
 
 #container {
@@ -38,7 +38,6 @@ body {
 .flicker {
   animation: flicker 2s infinite;
 }
-
 @keyframes flicker {
   0%,19%,21%,23%,25%,54%,56%,100% { text-shadow:0 0 5px #aaa,0 0 10px #999,0 0 20px #777; }
   20%,24%,55% { text-shadow:none; }
@@ -95,9 +94,9 @@ const poem = [
 "<span class='highlight'>0</span>тпечаток души — ключ к двери безмятежной, что скрыта в сердце бескрайней тишины."
 ];
 
-// Функция отображения блока с кнопкой "Дальше"
-function showBlock(lines, callback, delay=1500){
-  container.innerHTML = "";
+// функция показа блока с кнопкой "Дальше"
+function showBlock(lines, callback){
+  container.innerHTML="";
   let i=0;
 
   function nextLine(){
@@ -107,7 +106,7 @@ function showBlock(lines, callback, delay=1500){
       p.innerHTML=lines[i];
       container.appendChild(p);
       i++;
-      setTimeout(nextLine, delay);
+      setTimeout(nextLine,1500);
     } else {
       const btn=document.createElement("button");
       btn.textContent="Дальше";
@@ -138,7 +137,6 @@ function startPoem(){
     if(i<poem.length){
       const p=document.createElement("p");
       p.className="poem-line";
-      p.style.transform=`translateY(${i*10}px)`;
       p.innerHTML=poem[i];
       container.appendChild(p);
       i++;
@@ -149,15 +147,18 @@ function startPoem(){
   nextPoem();
 }
 
-// Старт последовательности без задержки, сразу после загрузки
+// Старт последовательности после загрузки
 document.addEventListener("DOMContentLoaded", ()=>{
-  showBlock(block1, ()=>{
-    showBlock(block2, ()=>{
-      showBlock(block3, ()=>{
-        startBlackout(startPoem);
+  // небольшая пауза на Loading…
+  setTimeout(()=>{
+    showBlock(block1, ()=>{
+      showBlock(block2, ()=>{
+        showBlock(block3, ()=>{
+          startBlackout(startPoem);
+        });
       });
     });
-  });
+  },1000);
 });
 </script>
 </body>
