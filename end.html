@@ -80,7 +80,7 @@
 </style>
 </head>
 <body>
-<div id="container"></div>
+<div id="container">Loading…</div>
 <div id="blackout"></div>
 
 <audio autoplay loop>
@@ -139,7 +139,8 @@ const poem = [
   "<span class='highlight'>0</span>тпечаток души — ключ к двери безмятежной,"
 ];
 
-function showLines(lines, callback) {
+// универсальная функция показа строк
+function showLines(lines, callback, delay=1000) {
   let i = 0;
   function next() {
     if (i < lines.length) {
@@ -148,7 +149,7 @@ function showLines(lines, callback) {
       p.innerHTML = lines[i];
       container.appendChild(p);
       i++;
-      setTimeout(next, 2000);
+      setTimeout(next, delay);
     } else {
       const btn = document.createElement("button");
       btn.textContent = "Продолжить";
@@ -185,18 +186,20 @@ function startPoem() {
     if (i < poem.length) {
       const p = document.createElement("p");
       p.className = "poem-line";
-      p.style.animationDelay = "0s";
       p.innerHTML = poem[i];
       container.appendChild(p);
       i++;
-      setTimeout(nextLine, 2500);
+      setTimeout(nextLine, 1500);
     }
   }
   nextLine();
 }
 
-// запуск
-showLines(block1, startBlock2);
+// старт после короткой паузы на "Loading…"
+setTimeout(() => {
+  container.innerHTML = "";
+  showLines(block1, startBlock2);
+}, 2000);
 </script>
 </body>
 </html>
