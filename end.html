@@ -145,7 +145,6 @@ function showLines(lines, callback) {
     if (i < lines.length) {
       const p = document.createElement("p");
       p.className = "line flicker";
-      p.style.animationDelay = (i * 2) + "s";
       p.innerHTML = lines[i];
       container.appendChild(p);
       i++;
